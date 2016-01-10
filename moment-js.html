@@ -1,0 +1,86 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="./moment-import.html">
+
+<!--
+A Polymer element to parse, validate, manipulate, and display dates using Moment.js.
+
+Example:
+
+    <moment-js
+      format="YYYY-MM-DD HH:mm:ss"
+      print></moment-js>
+
+Example:
+
+    <moment-js
+      date="2016-01-10 14:30"
+      dateFormat="YYYY-MM-DD HH:mm"
+      format="LLLL"
+      print></moment-js>
+
+@demo demo/index.html
+@hero hero.svg
+-->
+
+<dom-module id="moment-js">
+  <template>
+    <template is="dom-if" if="[[print]]">
+      [[formattedDate]]
+    </template>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'moment-js',
+
+      properties: {
+        /**
+         * Date parameter
+         */
+        date: {
+          type: String,
+          observer: '_updateFormattedDate'
+        },
+
+        /**
+         * Format for parsing the date parameter.
+         */
+        dateFormat: {
+          type: String,
+          observer: '_updateFormattedDate'
+        },
+
+        /**
+         * Format for setting the formattedDate.
+         */
+        format: {
+          type: String,
+          observer: '_updateFormattedDate'
+        },
+
+        /**
+         * Formatted Date.
+         */
+        formattedDate: {
+          type: String,
+          notify: true
+        },
+
+        /**
+         * Print formatted date.
+         */
+        print: {
+          type: Boolean,
+          value: false
+        }
+      },
+
+      _updateFormattedDate: function() {
+        var date = this.date || moment();
+        var dateFormat = this.dateFormat || moment.defaultFormat;
+        var format = this.format || moment.defaultFormat;
+        this.set('formattedDate', moment(date, dateFormat).format(format));
+      }
+    });
+  </script>
+</dom-module>
