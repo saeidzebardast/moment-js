@@ -37,6 +37,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           myEl = fixture('moment-js-fixture');
         });
 
+        test('ISO Date is valid', function() {
+          myEl.set('date', '2011-10-10T10:20:30');
+          assert.isTrue(myEl.isValid);
+        });
+
+        test('ISO Date is not valid', function() {
+          myEl.set('date', '2011-10-10T10:20:90');
+          assert.isFalse(myEl.isValid);
+        });
+
+        test('Formatted Date is valid', function() {
+          myEl.set('date', '25/10/2011 10 20 30');
+          myEl.set('dateFormat', 'DD/MM/YYYY HH mm ss');
+          assert.isTrue(myEl.isValid);
+        });
+
+        test('Formatted Date is not valid', function() {
+          myEl.set('date', '25/10/2011 10 20 90');
+          myEl.set('dateFormat', 'DD/MM/YYYY HH mm ss');
+          assert.isFalse(myEl.isValid);
+        });
+
         test('distributed children', function() {
           var els = myEl.getContentChildren();
           assert.equal(els.length, 0, 'zero distributed node');
