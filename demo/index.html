@@ -30,16 +30,29 @@
 </head>
 
 <body unresolved>
-  <p>An example of
-    <code>&lt;moment-js&gt;</code>:</p>
+  <h3>An example of
+    <code>&lt;moment-js&gt;</code>:</h3>
 
-    <demo-snippet>
-      <moment-js format="YYYY-MM-DD HH:mm:ss" print></moment-js>
-    </demo-snippet>
+  <h4>Current date</h4>
+  <demo-snippet>
+    <moment-js format="YYYY-MM-DD HH:mm:ss"></moment-js>
+  </demo-snippet>
 
-    <demo-snippet>
-      <moment-js date="2016-01-10 14:30" dateFormat="YYYY-MM-DD HH:mm" format="LLLL" print></moment-js>
-    </demo-snippet>
+  <h4>Format custom date</h4>
+  <demo-snippet>
+    <moment-js date="2016-01-10 14:30" dateFormat="YYYY-MM-DD HH:mm" format="LLLL"></moment-js>
+  </demo-snippet>
+
+
+  <h4>Hide printing formatted date</h4>
+  <demo-snippet>
+    <moment-js date="2016-01-10 14:30" dateFormat="YYYY-MM-DD HH:mm" format="LLLL" formattedDate="{{myDate}}" hide></moment-js>
+  </demo-snippet>
+
+  <h4>Format milliseconds</h4>
+  <demo-snippet>
+    <moment-js date="13700" format="HH:mm:ss.SSS" utc></moment-js>
+  </demo-snippet>
 </body>
 
 </html>

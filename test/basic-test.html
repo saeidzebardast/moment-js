@@ -59,6 +59,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           assert.isFalse(myEl.isValid);
         });
 
+        test('Format UTC Milliseconds', function() {
+          myEl.set('date', '13700');
+          myEl.set('format', 'HH:mm:ss.SSS');
+          myEl.set('utc', true);
+          assert.equal(myEl.formattedDate, '00:00:13.700');
+        });
+
         test('distributed children', function() {
           var els = myEl.getContentChildren();
           assert.equal(els.length, 0, 'zero distributed node');

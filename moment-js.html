@@ -24,7 +24,7 @@ Example:
 
 <dom-module id="moment-js">
   <template>
-    <template is="dom-if" if="[[print]]">
+    <template is="dom-if" if="[[!hide]]">
       [[formattedDate]]
     </template>
   </template>
@@ -46,8 +46,7 @@ Example:
          * Format for parsing the date parameter.
          */
         dateFormat: {
-          type: String,
-          value: moment.defaultFormat
+          type: String
         },
 
         /**
@@ -67,9 +66,17 @@ Example:
         },
 
         /**
-         * Print formatted date.
+         * Enable UTC Mode.
          */
-        print: {
+        utc: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * Hide showing formatted date.
+         */
+        hide: {
           type: Boolean,
           value: false
         },
@@ -83,10 +90,36 @@ Example:
         },
       },
 
-      observers: ['_updateIsValid(date, dateFormat)', '_updateFormattedDate(date, dateFormat, format)'],
+      observers: [
+        '_checkAndSetIfDateIsNumber(date)',
+        '_updateIsValid(date)',
+        '_updateIsValid(dateFormat)',
+        '_updateFormattedDate(date)',
+        '_updateFormattedDate(dateFormat)',
+        '_updateFormattedDate(format)',
+        '_updateFormattedDate(utc)'
+      ],
+
+      _checkAndSetIfDateIsNumber: function(newVal) {
+        if (!isNaN(newVal)) {
+          this.set('date', Number(this.date));
+        }
+      },
 
       _updateFormattedDate: function() {
-        this.set('formattedDate', moment(this.date, this.dateFormat).format(this.format));
+        if (typeof this.dateFormat === 'undefined') {
+          if (this.utc) {
+            this.set('formattedDate', moment.utc(this.date).format(this.format));
+          } else {
+            this.set('formattedDate', moment(this.date).format(this.format));
+          }
+        } else {
+          if (this.utc) {
+            this.set('formattedDate', moment.utc(this.date, this.dateFormat).format(this.format));
+          } else {
+            this.set('formattedDate', moment(this.date, this.dateFormat).format(this.format));
+          }
+        }
       },
 
       _updateIsValid: function() {
