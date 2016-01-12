@@ -39,7 +39,7 @@ Example:
          */
         date: {
           type: String,
-          observer: '_updateFormattedDate'
+          value: moment().format()
         },
 
         /**
@@ -47,8 +47,7 @@ Example:
          */
         dateFormat: {
           type: String,
-          value: moment.defaultFormat,
-          observer: '_updateFormattedDate'
+          value: moment.defaultFormat
         },
 
         /**
@@ -56,8 +55,7 @@ Example:
          */
         format: {
           type: String,
-          value: moment.defaultFormat,
-          observer: '_updateFormattedDate'
+          value: moment.defaultFormat
         },
 
         /**
@@ -85,13 +83,10 @@ Example:
         },
       },
 
-      observers: ['_updateIsValid(date, dateFormat)'],
+      observers: ['_updateIsValid(date, dateFormat)', '_updateFormattedDate(date, dateFormat, format)'],
 
       _updateFormattedDate: function() {
-        var date = this.date || moment();
-        var dateFormat = this.dateFormat;
-        var format = this.format;
-        this.set('formattedDate', moment(date, dateFormat).format(format));
+        this.set('formattedDate', moment(this.date, this.dateFormat).format(this.format));
       },
 
       _updateIsValid: function() {

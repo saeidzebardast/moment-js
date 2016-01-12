@@ -6,51 +6,40 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <title>moment-js Demo</title>
   <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+  <link rel="import" href="../../demo-snippet/demo-snippet.html">
   <link rel="import" href="../moment-js.html">
+
+  <style is="custom-style">
+    body {
+      font-family: 'Roboto', 'Noto', sans-serif;
+      font-size: 14px;
+      margin: 0;
+      padding: 24px;
+    }
+
+    demo-snippet {
+      margin: 24px;
+      width: 100%;
+      --demo-snippet-demo: {
+        padding: 20px;
+        @apply(--layout-horizontal);
+        @apply(--layout-center-justified);
+      }
+    }
+  </style>
 </head>
 
 <body unresolved>
   <p>An example of
     <code>&lt;moment-js&gt;</code>:</p>
-<div style="display: flex">
-  <table>
-    <thead>
-      <tr>
-        <th>
-          Usage
-        </th>
-        <th>Output</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          <pre>
-            &lt;moment-js
-              format="YYYY-MM-DD HH:mm:ss"
-              print&gt;&lt;/moment-js&gt;
-          </pre>
-        </td>
-        <td>
-          <moment-js format="YYYY-MM-DD HH:mm:ss" print></moment-js>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <pre>
-            &lt;moment-js
-              date="2016-01-10 14:30"
-              dateFormat="YYYY-MM-DD HH:mm"
-              format="LLLL"
-              print&gt;&lt;/moment-js&gt;
-          </pre>
-        </td>
-        <td>
-          <moment-js date="2016-01-10 14:30" dateFormat="YYYY-MM-DD HH:mm" format="LLLL" print></moment-js>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+
+    <demo-snippet>
+      <moment-js format="YYYY-MM-DD HH:mm:ss" print></moment-js>
+    </demo-snippet>
+
+    <demo-snippet>
+      <moment-js date="2016-01-10 14:30" dateFormat="YYYY-MM-DD HH:mm" format="LLLL" print></moment-js>
+    </demo-snippet>
 </body>
+
 </html>
