@@ -66,6 +66,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           assert.equal(myEl.formattedDate, '00:00:13.700');
         });
 
+        test('Format date', function() {
+          myEl.set('date', '2016-02-03 08:12:16.456');
+          myEl.set('dateFormat', 'YYYY-MM-DD HH:mm:ss.SSS');
+          myEl.set('format', 'YYYY/MM/DD HH mm ss SSS');
+          assert.equal(myEl.formattedDate, '2016/02/03 08 12 16 456');
+        });
+
         test('distributed children', function() {
           var els = myEl.getContentChildren();
           assert.equal(els.length, 0, 'zero distributed node');
