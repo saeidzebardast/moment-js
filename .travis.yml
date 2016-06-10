@@ -1,13 +1,7 @@
 language: node_js
-sudo: false
-before_script:
-  - npm install web-component-tester
-  - npm install bower
-  - 'export PATH=$PWD/node_modules/.bin:$PATH'
-  - bower install
-  - npm install polylint
-  - polylint
-node_js: 4
+sudo: required
+dist: trusty
+node_js: stable
 addons:
   firefox: latest
   apt:
@@ -15,5 +9,10 @@ addons:
       - google-chrome
     packages:
       - google-chrome-stable
+before_script:
+  - npm install web-component-tester
+  - npm install bower
+  - export PATH=$PWD/node_modules/.bin:$PATH
+  - bower install
 script:
-  - xvfb-run wct
+  - xvfb-run wct --skip-plugin sauce
