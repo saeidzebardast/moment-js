@@ -3,16 +3,15 @@ sudo: required
 dist: trusty
 node_js: stable
 addons:
-  firefox: latest
+  firefox: 46
   apt:
     sources:
       - google-chrome
     packages:
       - google-chrome-stable
 before_script:
-  - npm install web-component-tester
-  - npm install bower
-  - export PATH=$PWD/node_modules/.bin:$PATH
+  - npm install -g bower polylint web-component-tester
   - bower install
+  - polylint
 script:
   - xvfb-run wct --skip-plugin sauce
