@@ -22,9 +22,7 @@ Example:
 
 <dom-module id="moment-js">
   <template>
-    <template is="dom-if" if="[[!hide]]">
-      <span>[[formattedDate]]</span>
-    </template>
+    <span hidden$="[[hide]]">[[formattedDate]]</span>
   </template>
 
   <script>
