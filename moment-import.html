@@ -1,1 +1,11 @@
-<script src="../moment/min/moment.min.js"></script>
+<script>
+	(function() {
+		var script;
+		if ( typeof window.moment === 'undefined'
+      && !window._downloading_moment) {
+			script = document.createElement( 'script' );
+			script.src = '../moment/moment.js';
+			document.body.appendChild( script );
+		}
+	}());
+</script>
