@@ -115,15 +115,15 @@ Example:
       _updateFormattedDate: function() {
         if (typeof this.dateFormat === 'undefined') {
           if (this.utc) {
-            this.set('formattedDate', moment.utc(this.date).format(this.format));
+            this._setFormattedDate(moment.utc(this.date).format(this.format));
           } else {
-            this.set('formattedDate', moment(this.date).format(this.format));
+            this._setFormattedDate(moment(this.date).format(this.format));
           }
         } else {
           if (this.utc) {
-            this.set('formattedDate', moment.utc(this.date, this.dateFormat).format(this.format));
+            this._setFormattedDate(moment.utc(this.date, this.dateFormat).format(this.format));
           } else {
-            this.set('formattedDate', moment(this.date, this.dateFormat).format(this.format));
+            this._setFormattedDate(moment(this.date, this.dateFormat).format(this.format));
           }
         }
       },
