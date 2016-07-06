@@ -13,8 +13,17 @@ Example:
 
     <moment-js
       date="2016-01-10 14:30"
-      dateFormat="YYYY-MM-DD HH:mm"
+      date-format="YYYY-MM-DD HH:mm"
       format="LLLL"></moment-js>
+
+Example:
+
+    <moment-js
+      date="2016-01-10 14:30"
+      date-format="YYYY-MM-DD HH:mm"
+      format="LLLL"
+      formatted-date="{{myDate}}"
+      hide></moment-js>
 
 @demo demo/index.html
 @hero hero.svg
@@ -54,7 +63,7 @@ Example:
         },
 
         /**
-         * Formatted Date.
+         * Output Formatted Date.
          */
         formattedDate: {
           type: String,

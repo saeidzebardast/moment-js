@@ -13,8 +13,8 @@ bower install moment-js
 ```
 <moment-js></moment-js>
 <moment-js format="YYYY-MM-DD HH:mm:ss"></moment-js>
-<moment-js date="2016-01-10 14:30" dateFormat="YYYY-MM-DD HH:mm" format="LLLL"></moment-js>
-<moment-js date="2012-09-21" dateFormat="YYYY-MM-DD" format="LLLL" formattedDate="{{myDate}}" hide></moment-js>
+<moment-js date="2016-01-10 14:30" date-format="YYYY-MM-DD HH:mm" format="LLLL"></moment-js>
+<moment-js date="2012-09-21" date-format="YYYY-MM-DD" format="LLLL" formatted-date="{{myDate}}" hide></moment-js>
 ```
 
 ## Docs & Demo
