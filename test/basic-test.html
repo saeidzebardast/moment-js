@@ -9,77 +9,107 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-    <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
 
-    <!-- Step 1: import the element to test -->
-    <link rel="import" href="../moment-js.html">
-  </head>
-  <body>
+  <!-- Step 1: import the element to test -->
+  <link rel="import" href="../moment-js.html">
+</head>
+<body>
 
-    <!-- You can use the document as a place to set up your fixtures. -->
-    <test-fixture id="moment-js-fixture">
-      <template>
-        <moment-js></moment-js>
-      </template>
-    </test-fixture>
+<!-- You can use the document as a place to set up your fixtures. -->
+<test-fixture id="moment-js-fixture">
+  <template>
+    <moment-js></moment-js>
+  </template>
+</test-fixture>
 
-    <script>
-      suite('<moment-js>', function() {
+<script>
+  suite('<moment-js>', function () {
 
-        var myEl;
+    var myEl;
 
-        setup(function() {
-          myEl = fixture('moment-js-fixture');
-        });
+    setup(function () {
+      myEl = fixture('moment-js-fixture');
+    });
 
-        test('ISO Date is valid', function() {
-          myEl.set('date', '2011-10-10T10:20:30');
-          assert.isTrue(myEl.isValid);
-        });
+    test('ISO Date is valid', function () {
+      myEl.set('date', '2011-10-10T10:20:30');
+      assert.isTrue(myEl.isValid);
+    });
 
-        test('ISO Date is not valid', function() {
-          myEl.set('date', '2011-10-10T10:20:90');
-          assert.isFalse(myEl.isValid);
-        });
+    test('ISO Date is not valid', function () {
+      myEl.set('date', '2011-10-10T10:20:90');
+      assert.isFalse(myEl.isValid);
+    });
 
-        test('Formatted Date is valid', function() {
-          myEl.set('date', '25/10/2011 10 20 30');
-          myEl.set('dateFormat', 'DD/MM/YYYY HH mm ss');
-          assert.isTrue(myEl.isValid);
-        });
+    test('Formatted Date is valid', function () {
+      myEl.set('date', '25/10/2011 10 20 30');
+      myEl.set('dateFormat', 'DD/MM/YYYY HH mm ss');
+      assert.isTrue(myEl.isValid);
+    });
 
-        test('Formatted Date is not valid', function() {
-          myEl.set('date', '25/10/2011 10 20 90');
-          myEl.set('dateFormat', 'DD/MM/YYYY HH mm ss');
-          assert.isFalse(myEl.isValid);
-        });
+    test('Formatted Date is not valid', function () {
+      myEl.set('date', '25/10/2011 10 20 90');
+      myEl.set('dateFormat', 'DD/MM/YYYY HH mm ss');
+      assert.isFalse(myEl.isValid);
+    });
 
-        test('Format UTC Milliseconds', function() {
-          myEl.set('date', '13700');
-          myEl.set('format', 'HH:mm:ss.SSS');
-          myEl.set('utc', true);
-          assert.equal(myEl.formattedDate, '00:00:13.700');
-        });
+    test('Format UTC Milliseconds', function () {
+      myEl.set('date', '13700');
+      myEl.set('format', 'HH:mm:ss.SSS');
+      myEl.set('utc', true);
+      assert.equal(myEl.formattedDate, '00:00:13.700');
+    });
 
-        test('Format date', function() {
-          myEl.set('date', '2016-02-03 08:12:16.456');
-          myEl.set('dateFormat', 'YYYY-MM-DD HH:mm:ss.SSS');
-          myEl.set('format', 'YYYY/MM/DD HH mm ss SSS');
-          assert.equal(myEl.formattedDate, '2016/02/03 08 12 16 456');
-        });
+    test('Format date', function () {
+      myEl.set('date', '2016-02-03 08:12:16.456');
+      myEl.set('dateFormat', 'YYYY-MM-DD HH:mm:ss.SSS');
+      myEl.set('format', 'YYYY/MM/DD HH mm ss SSS');
+      assert.equal(myEl.formattedDate, '2016/02/03 08 12 16 456');
+    });
 
-        test('distributed children', function() {
-          var els = myEl.getContentChildren();
-          assert.equal(els.length, 0, 'zero distributed node');
-        });
+    test('set startOf', function () {
+      myEl.set('date', '2016-02-03 08:12:16.456');
+      myEl.set('startOf', 'hour');
+      myEl.set('format', 'YYYY/MM/DD HH:mm:ss.SSS');
+      assert.equal(myEl.formattedDate, '2016/02/03 08:00:00.000');
+    });
 
-      });
-    </script>
+    test('set endOf', function () {
+      myEl.set('date', '2016-02-03 08:12:16.456');
+      myEl.set('endOf', 'day');
+      myEl.set('format', 'YYYY/MM/DD HH:mm:ss.SSS');
+      assert.equal(myEl.formattedDate, '2016/02/03 23:59:59.999');
+    });
 
-  </body>
+    test('relative time from now', function () {
+      myEl.set('date', '08:12');
+      myEl.set('dateFormat', 'HH:mm');
+      myEl.set('fromNow', true);
+      var tempDate = moment(myEl.date, myEl.dateFormat);
+      assert.equal(myEl.relativeTime, tempDate.fromNow());
+    });
+
+    test('relative time to now', function () {
+      myEl.set('date', '08:12');
+      myEl.set('dateFormat', 'HH:mm');
+      myEl.set('toNow', true);
+      var tempDate = moment(myEl.date, myEl.dateFormat);
+      assert.equal(myEl.relativeTime, tempDate.toNow());
+    });
+
+    test('distributed children', function () {
+      var els = myEl.getContentChildren();
+      assert.equal(els.length, 0, 'zero distributed node');
+    });
+
+  });
+</script>
+
+</body>
 </html>
