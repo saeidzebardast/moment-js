@@ -65,7 +65,8 @@ Example:
          * Format for parsing the date parameter.
          */
         dateFormat: {
-          type: String
+          type: String,
+          value: null
         },
 
         /**
@@ -115,7 +116,8 @@ Example:
          */
         isValid: {
           type: Boolean,
-          value: false
+          value: false,
+          computed: '_computeValidity(date, dateFormat)'
         },
 
         /**
@@ -173,8 +175,6 @@ Example:
 
       observers: [
         '_checkAndSetIfDateIsNumber(date)',
-        '_updateIsValid(date)',
-        '_updateIsValid(dateFormat)',
         '_updateFormattedDateMoment(date)',
         '_updateFormattedDateMoment(dateFormat)',
         '_updateFormattedDateMoment(utc)',
@@ -188,17 +188,17 @@ Example:
       },
 
       _updateFormattedDateMoment: function () {
-        if (typeof this.dateFormat === 'undefined') {
-          if (this.utc) {
-            this._setFormattedDateMoment(moment.utc(this.date));
-          } else {
-            this._setFormattedDateMoment(moment(this.date));
-          }
-        } else {
+        if (this.dateFormat) {
           if (this.utc) {
             this._setFormattedDateMoment(moment.utc(this.date, this.dateFormat));
           } else {
             this._setFormattedDateMoment(moment(this.date, this.dateFormat));
+          }
+        } else {
+          if (this.utc) {
+            this._setFormattedDateMoment(moment.utc(this.date));
+          } else {
+            this._setFormattedDateMoment(moment(this.date));
           }
         }
 
@@ -212,15 +212,15 @@ Example:
         }
       },
 
-      _updateIsValid: function () {
-        if (typeof this.dateFormat === 'undefined') {
+      _computeValidity: function () {
+        if (this.dateFormat) {
           /**
            * Moment will show a warning for invalid dates. e.g. 14:30.
            * The warning will be removed in next major version of moment.
            */
-          this.set('isValid', moment(this.date).isValid());
+          return moment(this.date, this.dateFormat).isValid();
         } else {
-          this.set('isValid', moment(this.date, this.dateFormat).isValid());
+          return moment(this.date).isValid();
         }
       },
 
