@@ -108,6 +108,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       assert.equal(els.length, 0, 'zero distributed node');
     });
 
+    test('default value is the current date', function() {
+      assert.equal(myEl.date, new Date());
+    });
+
   });
 </script>
 
