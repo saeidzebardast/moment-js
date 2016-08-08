@@ -58,7 +58,8 @@ Example:
          * Date parameter
          */
         date: {
-          type: String
+          type: String,
+          value: Date
         },
 
         /**
@@ -175,9 +176,7 @@ Example:
 
       observers: [
         '_checkAndSetIfDateIsNumber(date)',
-        '_updateFormattedDateMoment(date)',
-        '_updateFormattedDateMoment(dateFormat)',
-        '_updateFormattedDateMoment(utc)',
+        '_updateFormattedDateMoment(date, dateFormat, utc)',
         '_updateFormattedDate(format)'
       ],
 
