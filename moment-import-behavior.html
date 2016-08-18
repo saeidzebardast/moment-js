@@ -1,0 +1,57 @@
+<link rel="import" href="../polymer/polymer.html">
+<script>
+  window.MomentJs = window.MomentJs || {};
+
+  /**
+   * @polymerBehavior MomentJs.MomentImportBehavior
+   */
+  MomentJs.MomentImportBehavior = {
+    ready: function () {
+      if (typeof window.moment === 'undefined') {
+        if (!window._downloading_moment) {
+          window._downloading_moment = true;
+          this._loadMomentJs();
+        } else {
+          this._waitToLoadMomentJs();
+        }
+      }
+    },
+
+    /**
+     * Load momentjs library from local.
+     *
+     * @private
+       */
+    _loadMomentJs: function () {
+      var thiz = this;
+
+      var script = document.createElement('script');
+
+      /**
+       * TODO: Fix relative path.
+       * There is an issue for relative paths in JS. Check #1
+       */
+      script.src = '../../moment/min/moment.min.js';
+      script.onload = function () {
+        thiz.fire('moment-is-ready');
+      };
+      document.body.appendChild(script);
+    },
+
+    /**
+     * Wait till loading momentjs complete and then fire the event `moment-is-ready`.
+     *
+     * @private
+       */
+    _waitToLoadMomentJs: function() {
+      if (typeof window.moment !== 'undefined') {
+        this.fire('moment-is-ready');
+      } else {
+        var thiz = this;
+        window.setTimeout(function () {
+          thiz._waitToLoadMomentJs();
+        }, 1);
+      }
+    }
+  };
+</script>
