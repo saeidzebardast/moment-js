@@ -18,23 +18,16 @@
     },
 
     /**
-     * Load momentjs library from local.
+     * Loads momentjs library from local.
      *
      * @private
-       */
-    _loadMomentJs: function () {
-      var thiz = this;
-
+     */
+    _loadMomentJs: function() {
       var script = document.createElement('script');
-
-      /**
-       * TODO: Fix relative path.
-       * There is an issue for relative paths in JS. Check #1
-       */
-      script.src = '../../moment/min/moment.min.js';
-      script.onload = function () {
-        thiz.fire('moment-is-ready');
-      };
+      script.src = this.resolveUrl('../moment/min/moment.min.js');
+      script.onload = function() {
+        this.fire('moment-is-ready');
+      }.bind(this);
       document.body.appendChild(script);
     },
 
