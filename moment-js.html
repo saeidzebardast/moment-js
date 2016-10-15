@@ -1,5 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="./moment-import.html">
+<link rel="import" href="./moment-import-behavior.html">
 
 <!--
 A Polymer element to parse, validate, manipulate, and display dates using Moment.js.
@@ -53,6 +53,10 @@ Example:
     Polymer({
       is: 'moment-js',
 
+      behaviors: [
+        MomentJs.MomentImportBehavior
+      ],
+
       properties: {
         /**
          * Date parameter
@@ -74,8 +78,7 @@ Example:
          * Format for setting the formattedDate.
          */
         format: {
-          type: String,
-          value: moment.defaultFormat
+          type: String
         },
 
         /**
@@ -117,24 +120,21 @@ Example:
          */
         isValid: {
           type: Boolean,
-          value: false,
-          computed: '_computeValidity(date, dateFormat)'
+          value: false
         },
 
         /**
          * Mutates the original moment by setting it to the start of a unit of time.
          */
         startOf: {
-          type: String,
-          observer: '_startOfChanged'
+          type: String
         },
 
         /**
          * Mutates the original moment by setting it to the end of a unit of time.
          */
         endOf: {
-          type: String,
-          observer: '_endOfChanged'
+          type: String
         },
 
         /**
@@ -150,8 +150,7 @@ Example:
          * Calculate relativeTime from now.
          */
         fromNow: {
-          type: Boolean,
-          observer: '_fromNowChanged'
+          type: Boolean
         },
 
         /**
@@ -159,8 +158,7 @@ Example:
          * This is similar to fromNow, but gives the opposite interval: fromNow() = - toNow().
          */
         toNow: {
-          type: Boolean,
-          observer: '_toNowChanged'
+          type: Boolean
         },
 
         /**
@@ -174,11 +172,9 @@ Example:
         }
       },
 
-      observers: [
-        '_checkAndSetIfDateIsNumber(date)',
-        '_updateFormattedDateMoment(date, dateFormat, utc)',
-        '_updateFormattedDate(format)'
-      ],
+      listeners: {
+        'moment-is-ready': '_momentIsReady'
+      },
 
       _checkAndSetIfDateIsNumber: function (newVal) {
         if (!isNaN(newVal)) {
@@ -211,15 +207,15 @@ Example:
         }
       },
 
-      _computeValidity: function () {
+      _updateIsValid: function () {
         if (this.dateFormat) {
           /**
            * Moment will show a warning for invalid dates. e.g. 14:30.
            * The warning will be removed in next major version of moment.
            */
-          return moment(this.date, this.dateFormat).isValid();
+          this.set('isValid', moment(this.date, this.dateFormat).isValid());
         } else {
-          return moment(this.date).isValid();
+          this.set('isValid', moment(this.date).isValid());
         }
       },
 
@@ -245,6 +241,33 @@ Example:
           this._setRelativeTime(this.formattedDateMoment.toNow());
           this._setOutput(this.relativeTime);
         }
+      },
+
+      _momentIsReady: function () {
+        if (typeof this.format === 'undefined') {
+          this.set('format', moment.defaultFormat);
+        }
+
+        this.observers = [
+          '_checkAndSetIfDateIsNumber(date)',
+          '_updateFormattedDateMoment(date, dateFormat, utc)',
+          '_updateFormattedDate(format)',
+          '_startOfChanged(startOf)',
+          '_endOfChanged(endOf)',
+          '_fromNowChanged(fromNow)',
+          '_toNowChanged(toNow)',
+          '_updateIsValid(date, dateFormat)'
+        ];
+
+        // TODO: run only needed observer function (for first time.
+        this._checkAndSetIfDateIsNumber(this.date);
+        this._updateFormattedDateMoment(this.date, this.dateFormat, this.utc);
+        this._updateFormattedDate(this.format);
+        this._startOfChanged(this.startOf);
+        this._endOfChanged(this.endOf);
+        this._fromNowChanged(this.fromNow);
+        this._toNowChanged(this.toNow);
+        this._updateIsValid(this.date, this.dateFormat);
       }
     });
   </script>

@@ -37,81 +37,116 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       myEl = fixture('moment-js-fixture');
     });
 
-    test('ISO Date is valid', function () {
-      myEl.set('date', '2011-10-10T10:20:30');
-      assert.isTrue(myEl.isValid);
+    test('ISO Date is valid', function (done) {
+      myEl.addEventListener('moment-is-ready', function () {
+        myEl.set('date', '2011-10-10T10:20:30');
+        assert.isTrue(myEl.isValid);
+        done();
+      });
     });
 
     test('ISO Date is not valid', function () {
-      myEl.set('date', '2011-10-10T10:20:90');
-      assert.isFalse(myEl.isValid);
+      myEl.addEventListener('moment-is-ready', function () {
+        myEl.set('date', '2011-10-10T10:20:90');
+        assert.isFalse(myEl.isValid);
+        done();
+      });
     });
 
     test('Formatted Date is valid', function () {
-      myEl.set('date', '25/10/2011 10 20 30');
-      myEl.set('dateFormat', 'DD/MM/YYYY HH mm ss');
-      assert.isTrue(myEl.isValid);
+      myEl.addEventListener('moment-is-ready', function () {
+        myEl.set('date', '25/10/2011 10 20 30');
+        myEl.set('dateFormat', 'DD/MM/YYYY HH mm ss');
+        assert.isTrue(myEl.isValid);
+        done();
+      });
     });
 
     test('Formatted Date is not valid', function () {
-      myEl.set('date', '25/10/2011 10 20 90');
-      myEl.set('dateFormat', 'DD/MM/YYYY HH mm ss');
-      assert.isFalse(myEl.isValid);
+      myEl.addEventListener('moment-is-ready', function () {
+        myEl.set('date', '25/10/2011 10 20 90');
+        myEl.set('dateFormat', 'DD/MM/YYYY HH mm ss');
+        assert.isFalse(myEl.isValid);
+        done();
+      });
     });
 
     test('Format UTC Milliseconds', function () {
-      myEl.set('date', '13700');
-      myEl.set('format', 'HH:mm:ss.SSS');
-      myEl.set('utc', true);
-      assert.equal(myEl.formattedDate, '00:00:13.700');
+      myEl.addEventListener('moment-is-ready', function () {
+        myEl.set('date', '13700');
+        myEl.set('format', 'HH:mm:ss.SSS');
+        myEl.set('utc', true);
+        assert.equal(myEl.formattedDate, '00:00:13.700');
+        done();
+      });
     });
 
     test('Format date', function () {
-      myEl.set('date', '2016-02-03 08:12:16.456');
-      myEl.set('dateFormat', 'YYYY-MM-DD HH:mm:ss.SSS');
-      myEl.set('format', 'YYYY/MM/DD HH mm ss SSS');
-      assert.equal(myEl.formattedDate, '2016/02/03 08 12 16 456');
+      myEl.addEventListener('moment-is-ready', function () {
+        myEl.set('date', '2016-02-03 08:12:16.456');
+        myEl.set('dateFormat', 'YYYY-MM-DD HH:mm:ss.SSS');
+        myEl.set('format', 'YYYY/MM/DD HH mm ss SSS');
+        assert.equal(myEl.formattedDate, '2016/02/03 08 12 16 456');
+        done();
+      });
     });
 
     test('set startOf', function () {
-      myEl.set('date', '2016-02-03 08:12:16.456');
-      myEl.set('startOf', 'hour');
-      myEl.set('format', 'YYYY/MM/DD HH:mm:ss.SSS');
-      assert.equal(myEl.formattedDate, '2016/02/03 08:00:00.000');
+      myEl.addEventListener('moment-is-ready', function () {
+        myEl.set('date', '2016-02-03 08:12:16.456');
+        myEl.set('startOf', 'hour');
+        myEl.set('format', 'YYYY/MM/DD HH:mm:ss.SSS');
+        assert.equal(myEl.formattedDate, '2016/02/03 08:00:00.000');
+        done();
+      });
     });
 
     test('set endOf', function () {
-      myEl.set('date', '2016-02-03 08:12:16.456');
-      myEl.set('endOf', 'day');
-      myEl.set('format', 'YYYY/MM/DD HH:mm:ss.SSS');
-      assert.equal(myEl.formattedDate, '2016/02/03 23:59:59.999');
+      myEl.addEventListener('moment-is-ready', function () {
+        myEl.set('date', '2016-02-03 08:12:16.456');
+        myEl.set('endOf', 'day');
+        myEl.set('format', 'YYYY/MM/DD HH:mm:ss.SSS');
+        assert.equal(myEl.formattedDate, '2016/02/03 23:59:59.999');
+        done();
+      });
     });
 
     test('relative time from now', function () {
-      myEl.set('date', '08:12');
-      myEl.set('dateFormat', 'HH:mm');
-      myEl.set('fromNow', true);
-      var tempDate = moment(myEl.date, myEl.dateFormat);
-      assert.equal(myEl.relativeTime, tempDate.fromNow());
+      myEl.addEventListener('moment-is-ready', function () {
+        myEl.set('date', '08:12');
+        myEl.set('dateFormat', 'HH:mm');
+        myEl.set('fromNow', true);
+        var tempDate = moment(myEl.date, myEl.dateFormat);
+        assert.equal(myEl.relativeTime, tempDate.fromNow());
+        done();
+      });
     });
 
     test('relative time to now', function () {
-      myEl.set('date', '08:12');
-      myEl.set('dateFormat', 'HH:mm');
-      myEl.set('toNow', true);
-      var tempDate = moment(myEl.date, myEl.dateFormat);
-      assert.equal(myEl.relativeTime, tempDate.toNow());
+      myEl.addEventListener('moment-is-ready', function () {
+        myEl.set('date', '08:12');
+        myEl.set('dateFormat', 'HH:mm');
+        myEl.set('toNow', true);
+        var tempDate = moment(myEl.date, myEl.dateFormat);
+        assert.equal(myEl.relativeTime, tempDate.toNow());
+        done();
+      });
     });
 
     test('distributed children', function () {
-      var els = myEl.getContentChildren();
-      assert.equal(els.length, 0, 'zero distributed node');
+      myEl.addEventListener('moment-is-ready', function () {
+        var els = myEl.getContentChildren();
+        assert.equal(els.length, 0, 'zero distributed node');
+        done();
+      });
     });
 
-    test('default value is the current date', function() {
-      assert.equal(myEl.date, new Date());
+    test('default value is the current date', function () {
+      myEl.addEventListener('moment-is-ready', function () {
+        assert.equal(myEl.date, new Date());
+        done();
+      });
     });
-
   });
 </script>
 
