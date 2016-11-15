@@ -63,7 +63,8 @@ Example:
          */
         date: {
           type: String,
-          value: Date
+          value: Date,
+          observer: '_dateChanged'
         },
 
         /**
@@ -71,7 +72,8 @@ Example:
          */
         dateFormat: {
           type: String,
-          value: null
+          value: null,
+          observer: '_updateFormattedDateMoment'
         },
 
         /**
@@ -104,7 +106,8 @@ Example:
          */
         utc: {
           type: Boolean,
-          value: false
+          value: false,
+          observer: '_updateFormattedDateMoment'
         },
 
         /**
@@ -169,6 +172,15 @@ Example:
           type: String,
           readOnly: true,
           notify: true
+        },
+
+        /**
+         * Indicate moment is loaded and ready to use.
+         */
+        isMomentReady: {
+          type: Boolean,
+          value: false,
+          notify: true
         }
       },
 
@@ -176,28 +188,36 @@ Example:
         'moment-is-ready': '_momentIsReady'
       },
 
-      _checkAndSetIfDateIsNumber: function (newVal) {
-        if (!isNaN(newVal)) {
-          this.set('date', Number(this.date));
+      _dateChanged: function (newVal) {
+        if (this.isMomentReady === true) {
+          if (isNaN(newVal)) {
+            this.set('date', this.date);
+          } else {
+            this.set('date', Number(this.date));
+          }
+
+          this._updateFormattedDateMoment();
         }
       },
 
       _updateFormattedDateMoment: function () {
-        if (this.dateFormat) {
-          if (this.utc) {
-            this._setFormattedDateMoment(moment.utc(this.date, this.dateFormat));
+        if (this.isMomentReady === true) {
+          if (this.dateFormat) {
+            if (this.utc) {
+              this._setFormattedDateMoment(moment.utc(this.date, this.dateFormat));
+            } else {
+              this._setFormattedDateMoment(moment(this.date, this.dateFormat));
+            }
           } else {
-            this._setFormattedDateMoment(moment(this.date, this.dateFormat));
+            if (this.utc) {
+              this._setFormattedDateMoment(moment.utc(this.date));
+            } else {
+              this._setFormattedDateMoment(moment(this.date));
+            }
           }
-        } else {
-          if (this.utc) {
-            this._setFormattedDateMoment(moment.utc(this.date));
-          } else {
-            this._setFormattedDateMoment(moment(this.date));
-          }
-        }
 
-        this._updateFormattedDate();
+          this._updateFormattedDate();
+        }
       },
 
       _updateFormattedDate: function () {
@@ -244,13 +264,17 @@ Example:
       },
 
       _momentIsReady: function () {
+        this.set('isMomentReady', true);
+
         if (typeof this.format === 'undefined') {
           this.set('format', moment.defaultFormat);
         }
 
+        /**
+         * We can't use multi-property observer for _updateFormattedDateMoment(date, dateFormat, utc).
+         * Because one of them could be undefined. So, the observer won't call.
+         */
         this.observers = [
-          '_checkAndSetIfDateIsNumber(date)',
-          '_updateFormattedDateMoment(date, dateFormat, utc)',
           '_updateFormattedDate(format)',
           '_startOfChanged(startOf)',
           '_endOfChanged(endOf)',
@@ -260,8 +284,7 @@ Example:
         ];
 
         // TODO: run only needed observer function (for first time.
-        this._checkAndSetIfDateIsNumber(this.date);
-        this._updateFormattedDateMoment(this.date, this.dateFormat, this.utc);
+        this._dateChanged(this.date);
         this._updateFormattedDate(this.format);
         this._startOfChanged(this.startOf);
         this._endOfChanged(this.endOf);
