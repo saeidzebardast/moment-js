@@ -144,6 +144,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         done();
       });
     });
+        
+    test('relative time can be updated', function () {
+      myEl.addEventListener('moment-is-ready', function () {
+        myEl.set('date', '08:12');
+        myEl.set('dateFormat', 'HH:mm');
+        myEl.set('toNow', true);
+        myEl.set('date', '10:20');
+        var tempDate = moment('10:20', myEl.dateFormat);
+        assert.equal(myEl.relativeTime, tempDate.toNow());
+        done();
+      });
+    });
 
     test('distributed children', function () {
       myEl.addEventListener('moment-is-ready', function () {
