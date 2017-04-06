@@ -217,13 +217,28 @@ Example:
           }
 
           this._updateFormattedDate();
+          this._updateRelativeTime();
         }
       },
 
       _updateFormattedDate: function () {
         if (this.formattedDateMoment) {
           this._setFormattedDate(this.formattedDateMoment.format(this.format));
-          this._setOutput(this.formattedDate);
+          if (!this.relativeTime) {
+            this._setOutput(this.formattedDate);
+          }
+        }
+      },
+
+      _updateRelativeTime: function() {
+        if (this.formattedDateMoment) {
+          if (this.fromNow) {
+            this._setRelativeTime(this.formattedDateMoment.fromNow());
+            this._setOutput(this.relativeTime);
+          } else if (this.toNow) {
+            this._setRelativeTime(this.formattedDateMoment.toNow());
+            this._setOutput(this.relativeTime);
+          }
         }
       },
 
@@ -249,20 +264,6 @@ Example:
         this._updateFormattedDate();
       },
 
-      _fromNowChanged: function () {
-        if (this.fromNow) {
-          this._setRelativeTime(this.formattedDateMoment.fromNow());
-          this._setOutput(this.relativeTime);
-        }
-      },
-
-      _toNowChanged: function () {
-        if (this.toNow) {
-          this._setRelativeTime(this.formattedDateMoment.toNow());
-          this._setOutput(this.relativeTime);
-        }
-      },
-
       _momentIsReady: function () {
         this.set('isMomentReady', true);
 
@@ -278,8 +279,8 @@ Example:
           '_updateFormattedDate(format)',
           '_startOfChanged(startOf)',
           '_endOfChanged(endOf)',
-          '_fromNowChanged(fromNow)',
-          '_toNowChanged(toNow)',
+          '_updateRelativeTime(fromNow)',
+          '_updateRelativeTime(toNow)',
           '_updateIsValid(date, dateFormat)'
         ];
 
@@ -288,8 +289,6 @@ Example:
         this._updateFormattedDate(this.format);
         this._startOfChanged(this.startOf);
         this._endOfChanged(this.endOf);
-        this._fromNowChanged(this.fromNow);
-        this._toNowChanged(this.toNow);
         this._updateIsValid(this.date, this.dateFormat);
       }
     });
