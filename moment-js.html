@@ -85,9 +85,7 @@ Example:
         /**
          * Format for setting the formattedDate.
          */
-        format: {
-          type: String
-        },
+        format: String,
 
         /**
          * Output formatted date.
@@ -135,16 +133,12 @@ Example:
         /**
          * Mutates the original moment by setting it to the start of a unit of time.
          */
-        startOf: {
-          type: String
-        },
+        startOf: String,
 
         /**
          * Mutates the original moment by setting it to the end of a unit of time.
          */
-        endOf: {
-          type: String
-        },
+        endOf: String,
 
         /**
          * Relative time output. e.g. a day ago, in 4 years.
@@ -158,24 +152,18 @@ Example:
         /**
          * Calculate relativeTime from now.
          */
-        fromNow: {
-          type: Boolean
-        },
+        fromNow: Boolean,
 
         /**
          * Calendar time output. e.g. Last Monday at 2:30 AM, Today at 2:30 AM.
          */
-        calendarTime: {
-          type: Boolean
-        },
+        calendarTime: Boolean,
 
         /**
          * Calculate relativeTime to now.
          * This is similar to fromNow, but gives the opposite interval: fromNow() = - toNow().
          */
-        toNow: {
-          type: Boolean
-        },
+        toNow: Boolean,
 
         /**
          * Output result to display.
@@ -247,9 +235,13 @@ Example:
         if (this.formattedDateMoment) {
           if (this.fromNow) {
             this._setRelativeTime(this.formattedDateMoment.fromNow());
-            this._setOutput(this.relativeTime);
           } else if (this.toNow) {
             this._setRelativeTime(this.formattedDateMoment.toNow());
+          } else if (this.calendarTime) {
+            this._setRelativeTime(this.formattedDateMoment.calendar());
+          }
+console.log(this.calendarTime, this.relativeTime);
+          if (this.relativeTime) {
             this._setOutput(this.relativeTime);
           }
         }
@@ -272,13 +264,6 @@ Example:
         this._updateFormattedDate();
       },
 
-      _calendarTimeChanged: function () {
-        if (this.calendarTime) {
-          this._setRelativeTime(this.formattedDateMoment.calendar());
-          this._setOutput(this.relativeTime);
-        }
-      },
-
       _endOfChanged: function () {
         this._setFormattedDateMoment(this.formattedDateMoment.endOf(this.endOf));
         this._updateFormattedDate();
@@ -299,18 +284,17 @@ Example:
           '_updateFormattedDate(format)',
           '_startOfChanged(startOf)',
           '_endOfChanged(endOf)',
-          '_calendarTimeChanged(calendarTime)',
           '_updateRelativeTime(fromNow)',
           '_updateRelativeTime(toNow)',
+          '_updateRelativeTime(calendarTime)',
           '_updateIsValid(date, dateFormat)'
         ];
 
-        // TODO: run only needed observer function (for first time.
+        // TODO: run only needed observer function (for first time.)
         this._dateChanged(this.date);
         this._updateFormattedDate(this.format);
         this._startOfChanged(this.startOf);
         this._endOfChanged(this.endOf);
-        this._calendarTimeChanged(this.calendarTime);
         this._updateIsValid(this.date, this.dateFormat);
       }
     });
