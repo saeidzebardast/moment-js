@@ -133,6 +133,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
     });
 
+    test('calendar time', function () {
+      myEl.addEventListener('moment-is-ready', function () {
+        var date = moment().startOf('month').format();
+        myEl.set('date', date);
+        myEl.set('dateFormat', 'HH:mm');
+        myEl.set('fromNow', true);
+        var tempDate = moment(myEl.date, myEl.dateFormat);
+        assert.equal(myEl.relativeTime, tempDate.calendar());
+        done();
+      });
+    });
+        
     test('relative time can be updated', function () {
       myEl.addEventListener('moment-is-ready', function () {
         myEl.set('date', '08:12');

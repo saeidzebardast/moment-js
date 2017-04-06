@@ -39,6 +39,12 @@ Example:
       date-format="HH:mm"
       from-now></moment-js>
 
+Example:
+
+    <moment-js
+      date="2016-01-10 14:30"
+      calendar-time></moment-js>
+
 
 @demo demo/index.html
 @hero hero.svg
@@ -157,6 +163,13 @@ Example:
         },
 
         /**
+         * Calendar time output. e.g. Last Monday at 2:30 AM, Today at 2:30 AM.
+         */
+        calendarTime: {
+          type: Boolean
+        },
+
+        /**
          * Calculate relativeTime to now.
          * This is similar to fromNow, but gives the opposite interval: fromNow() = - toNow().
          */
@@ -259,6 +272,13 @@ Example:
         this._updateFormattedDate();
       },
 
+      _calendarTimeChanged: function () {
+        if (this.calendarTime) {
+          this._setRelativeTime(this.formattedDateMoment.calendar());
+          this._setOutput(this.relativeTime);
+        }
+      },
+
       _endOfChanged: function () {
         this._setFormattedDateMoment(this.formattedDateMoment.endOf(this.endOf));
         this._updateFormattedDate();
@@ -279,6 +299,7 @@ Example:
           '_updateFormattedDate(format)',
           '_startOfChanged(startOf)',
           '_endOfChanged(endOf)',
+          '_calendarTimeChanged(calendarTime)',
           '_updateRelativeTime(fromNow)',
           '_updateRelativeTime(toNow)',
           '_updateIsValid(date, dateFormat)'
@@ -289,6 +310,7 @@ Example:
         this._updateFormattedDate(this.format);
         this._startOfChanged(this.startOf);
         this._endOfChanged(this.endOf);
+        this._calendarTimeChanged(this.calendarTime);
         this._updateIsValid(this.date, this.dateFormat);
       }
     });
