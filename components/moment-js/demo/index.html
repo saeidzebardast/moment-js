@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>moment-js Demo</title>
+  <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+  <link rel="import" href="../../demo-snippet/demo-snippet.html">
+  <link rel="import" href="../moment-js.html">
+
+  <style is="custom-style">
+    body {
+      font-family: 'Roboto', 'Noto', sans-serif;
+      font-size: 14px;
+      margin: 0;
+      padding: 24px;
+    }
+
+    demo-snippet {
+      margin: 24px;
+      width: 100%;
+      --demo-snippet-demo: {
+        padding: 20px;
+        @apply(--layout-horizontal);
+        @apply(--layout-center-justified);
+      }
+    }
+  </style>
+</head>
+
+<body unresolved>
+<h3>Examples of
+  <code>&lt;moment-js&gt;</code>:</h3>
+
+<h4>Current local date without format</h4>
+<demo-snippet>
+  <moment-js></moment-js>
+</demo-snippet>
+
+<h4>Current local date with format</h4>
+<demo-snippet>
+  <moment-js format="YYYY-MM-DD HH:mm:ss"></moment-js>
+</demo-snippet>
+
+<h4>Format custom date</h4>
+<demo-snippet>
+  <moment-js date="2016-01-10 14:30" date-format="YYYY-MM-DD HH:mm" format="LLLL"></moment-js>
+</demo-snippet>
+
+
+<h4>Hide printing formatted date</h4>
+<demo-snippet>
+  <moment-js date="2016-01-10 14:30" date-format="YYYY-MM-DD HH:mm" format="LLLL" formatted-date="{{myDate}}"
+             hide></moment-js>
+</demo-snippet>
+
+<h4>Format milliseconds</h4>
+<demo-snippet>
+  <moment-js date="13700" format="HH:mm:ss.SSS" utc></moment-js>
+</demo-snippet>
+
+<h4>Using startOf</h4>
+<demo-snippet>
+  <moment-js date="19:33" date-format="HH:mm" format="LLLL" start-of="hour"></moment-js>
+</demo-snippet>
+
+<h4>Using endOf</h4>
+<demo-snippet>
+  <moment-js end-of="day" format="LLLL"></moment-js>
+</demo-snippet>
+
+<h4>Relative time from now</h4>
+<demo-snippet>
+  <moment-js date="23:30" date-format="HH:mm" from-now></moment-js>
+</demo-snippet>
+
+<h4>Relative time to now
+  <small>(opposite of from now)</small>
+</h4>
+<demo-snippet>
+  <moment-js date="23:30" date-format="HH:mm" to-now></moment-js>
+</demo-snippet>
+
+<h4>Relative calender time</h4>
+<demo-snippet>
+  <moment-js date="14:30" date-format="HH:mm" calendar-time></moment-js>
+</demo-snippet>
+</body>
+
+</html>
