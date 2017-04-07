@@ -43,10 +43,9 @@
       if (typeof window.moment !== 'undefined') {
         this.fire('moment-is-ready');
       } else {
-        var thiz = this;
         window.setTimeout(function () {
-          thiz._waitToLoadMomentJs();
-        }, 1);
+          this._waitToLoadMomentJs();
+        }.bind(this), 1);
       }
     }
   };
