@@ -1,4 +1,4 @@
-# &lt;moment-js&gt; [![Build Status](https://travis-ci.org/saeidzebardast/moment-js.svg?branch=master)](https://travis-ci.org/saeidzebardast/moment-js)
+# &lt;moment-js&gt; [![Build Status](https://travis-ci.org/saeidzebardast/moment-js.svg?branch=master)](https://travis-ci.org/saeidzebardast/moment-js) [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/saeidzebardast/moment-js)
 
 A [Polymer](https://www.polymer-project.org) element to parse, validate, manipulate, and display dates using [Moment.js](http://momentjs.com/).
 
