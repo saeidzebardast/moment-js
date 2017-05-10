@@ -114,6 +114,18 @@ Example:
         },
 
         /**
+         * Sets the UTC offset.
+         * If the value is greater than 16 or lesser than -16, it will be interpreted than minutes
+         * If the value is lesser than 16 and greater than -16 it will be interpreted as hours
+         */
+        utcOffset: {
+          type: Number,
+          value: 0,
+          observer: '_updateFormattedDateMoment'
+        },
+
+
+        /**
          * Hide showing the output.
          */
         hide: {
@@ -200,17 +212,21 @@ Example:
         }
       },
 
-      _updateFormattedDateMoment: function () {
+      _updateFormattedDateMoment: function () { 
         if (this.isMomentReady === true) {
           if (this.dateFormat) {
             if (this.utc) {
               this._setFormattedDateMoment(moment.utc(this.date, this.dateFormat));
+            } else if (this.utcOffset !== undefined) {
+              this._setFormattedDateMoment(moment(this.date, this.dateFormat).utcOffset(this.utcOffset));
             } else {
               this._setFormattedDateMoment(moment(this.date, this.dateFormat));
             }
           } else {
             if (this.utc) {
               this._setFormattedDateMoment(moment.utc(this.date));
+            } else if (this.utcOffset !== undefined) {
+              this._setFormattedDateMoment(moment(this.date).utcOffset(this.utcOffset));
             } else {
               this._setFormattedDateMoment(moment(this.date));
             }
