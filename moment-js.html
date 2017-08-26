@@ -1,5 +1,6 @@
-<link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="./moment-import-behavior.html">
+<link rel="import" href="../polymer/polymer-element.html">
+<!--<link rel="import" href="./moment-import-behavior.html">-->
+<script src="../moment/min/moment.min.js"></script>
 
 <!--
 A Polymer element to parse, validate, manipulate, and display dates using Moment.js.
@@ -52,143 +53,174 @@ Example:
 
 <dom-module id="moment-js">
   <template>
+    <style>
+      :host {
+        display: inline-block;
+      }
+    </style>
     <span hidden$="[[hide]]">[[output]]</span>
   </template>
 
   <script>
-    Polymer({
-      is: 'moment-js',
+    /**
+     * @polymer
+     * @extends HTMLElement
+     */
+//    class MomentJs extends Polymer.Element {
+//    class MomentJsSpan extends window.Plutonium.MomentImportMixin(Polymer.Element) {
+    class MomentJsSpan extends Polymer.Element {
+      static get is() {
+        return 'moment-js'
+      }
 
-      behaviors: [
-        MomentJs.MomentImportBehavior
-      ],
+      static get observers() {
+        return [
+          '_updateFormattedDate(format)',
+          '_startOfChanged(startOf)',
+          '_endOfChanged(endOf)',
+          '_updateRelativeTime(fromNow)',
+          '_updateRelativeTime(toNow)',
+          '_updateRelativeTime(calendarTime)',
+          '_updateIsValid(date, dateFormat)',
+          '_updateFormattedDateMoment(dateFormat)',
+          '_dateChanged(date)',
+          '_updateFormattedDateMoment(utc)'
+        ]
+      }
 
-      properties: {
-        /**
-         * Date parameter
-         */
-        date: {
-          type: String,
-          observer: '_dateChanged'
-        },
+      static get properties() {
+        return {
+          /**
+           * Date parameter
+           */
+          date: {
+            type: String
+          },
+          /**
+           * Format for parsing the date parameter.
+           */
+          dateFormat: {
+            type: String,
+            value: null
+          },
 
-        /**
-         * Format for parsing the date parameter.
-         */
-        dateFormat: {
-          type: String,
-          value: null,
-          observer: '_updateFormattedDateMoment'
-        },
+          /**
+           * Format for setting the formattedDate.
+           */
+          format: String,
 
-        /**
-         * Format for setting the formattedDate.
-         */
-        format: String,
+          /**
+           * Output formatted date.
+           */
+          formattedDate: {
+            type: String,
+            readOnly: true,
+            notify: true
+          },
 
-        /**
-         * Output formatted date.
-         */
-        formattedDate: {
-          type: String,
-          readOnly: true,
-          notify: true
-        },
+          /**
+           * Moment object of formatted date.
+           */
+          formattedDateMoment: {
+            type: String,
+            readOnly: true,
+            notify: true
+          },
 
-        /**
-         * Moment object of formatted date.
-         */
-        formattedDateMoment: {
-          type: String,
-          readOnly: true,
-          notify: true
-        },
+          /**
+           * Enable UTC Mode.
+           */
+          utc: {
+            type: Boolean,
+            value: false
+          },
 
-        /**
-         * Enable UTC Mode.
-         */
-        utc: {
-          type: Boolean,
-          value: false,
-          observer: '_updateFormattedDateMoment'
-        },
+          /**
+           * Hide showing the output.
+           */
+          hide: {
+            type: Boolean,
+            value: false
+          },
 
-        /**
-         * Hide showing the output.
-         */
-        hide: {
-          type: Boolean,
-          value: false
-        },
+          /**
+           * Set True if date is valid.
+           */
+          isValid: {
+            type: Boolean,
+            value: false
+          },
 
-        /**
-         * Set True if date is valid.
-         */
-        isValid: {
-          type: Boolean,
-          value: false
-        },
+          /**
+           * Mutates the original moment by setting it to the start of a unit of time.
+           */
+          startOf: String,
 
-        /**
-         * Mutates the original moment by setting it to the start of a unit of time.
-         */
-        startOf: String,
+          /**
+           * Mutates the original moment by setting it to the end of a unit of time.
+           */
+          endOf: String,
 
-        /**
-         * Mutates the original moment by setting it to the end of a unit of time.
-         */
-        endOf: String,
+          /**
+           * Relative time output. e.g. a day ago, in 4 years.
+           */
+          relativeTime: {
+            type: String,
+            readOnly: true,
+            notify: true
+          },
 
-        /**
-         * Relative time output. e.g. a day ago, in 4 years.
-         */
-        relativeTime: {
-          type: String,
-          readOnly: true,
-          notify: true
-        },
+          /**
+           * Calculate relativeTime from now.
+           */
+          fromNow: Boolean,
 
-        /**
-         * Calculate relativeTime from now.
-         */
-        fromNow: Boolean,
+          /**
+           * Calendar time output. e.g. Last Monday at 2:30 AM, Today at 2:30 AM.
+           */
+          calendarTime: Boolean,
 
-        /**
-         * Calendar time output. e.g. Last Monday at 2:30 AM, Today at 2:30 AM.
-         */
-        calendarTime: Boolean,
+          /**
+           * Calculate relativeTime to now.
+           * This is similar to fromNow, but gives the opposite interval: fromNow() = - toNow().
+           */
+          toNow: Boolean,
 
-        /**
-         * Calculate relativeTime to now.
-         * This is similar to fromNow, but gives the opposite interval: fromNow() = - toNow().
-         */
-        toNow: Boolean,
+          /**
+           * Output result to display.
+           * It could be date time or relative time.
+           */
+          output:
+            {
+              type: String,
+              readOnly:
+                true,
+              notify:
+                true
+            }
+          ,
 
-        /**
-         * Output result to display.
-         * It could be date time or relative time.
-         */
-        output: {
-          type: String,
-          readOnly: true,
-          notify: true
-        },
+          /**
+           * Indicate moment is loaded and ready to use.
+           */
+          isMomentReady: {
+            type: Boolean,
+            value: false,
+            notify: true
+          }
+        };
+      }
 
-        /**
-         * Indicate moment is loaded and ready to use.
-         */
-        isMomentReady: {
-          type: Boolean,
-          value: false,
-          notify: true
-        }
-      },
+//      ready() {
+//        super.ready();
+//        this.addEventListener('moment-is-ready', e => {
+//          this._momentIsReady(e)
+//        });
+//        console.debug('Register moment-is-ready event listener');
+//      }
 
-      listeners: {
-        'moment-is-ready': '_momentIsReady'
-      },
 
-      _dateChanged: function (newVal) {
+      _dateChanged(newVal) {
         if (this.isMomentReady === true) {
           if (isNaN(newVal)) {
             this.set('date', this.date);
@@ -198,9 +230,9 @@ Example:
 
           this._updateFormattedDateMoment();
         }
-      },
+      }
 
-      _updateFormattedDateMoment: function () {
+      _updateFormattedDateMoment() {
         if (this.isMomentReady === true) {
           if (this.dateFormat) {
             if (this.utc) {
@@ -219,18 +251,18 @@ Example:
           this._updateFormattedDate();
           this._updateRelativeTime();
         }
-      },
+      }
 
-      _updateFormattedDate: function () {
+      _updateFormattedDate() {
         if (this.formattedDateMoment) {
           this._setFormattedDate(this.formattedDateMoment.format(this.format));
           if (!this.relativeTime) {
             this._setOutput(this.formattedDate);
           }
         }
-      },
+      }
 
-      _updateRelativeTime: function() {
+      _updateRelativeTime() {
         if (this.formattedDateMoment) {
           if (this.fromNow) {
             this._setRelativeTime(this.formattedDateMoment.fromNow());
@@ -244,9 +276,10 @@ Example:
             this._setOutput(this.relativeTime);
           }
         }
-      },
+      }
 
-      _updateIsValid: function () {
+
+      _updateIsValid() {
         if (this.dateFormat) {
           /**
            * Moment will show a warning for invalid dates. e.g. 14:30.
@@ -256,19 +289,20 @@ Example:
         } else {
           this.set('isValid', moment(this.date).isValid());
         }
-      },
+      }
 
-      _startOfChanged: function () {
+      _startOfChanged() {
         this._setFormattedDateMoment(this.formattedDateMoment.startOf(this.startOf));
         this._updateFormattedDate();
-      },
+      }
 
-      _endOfChanged: function () {
+      _endOfChanged() {
         this._setFormattedDateMoment(this.formattedDateMoment.endOf(this.endOf));
         this._updateFormattedDate();
-      },
+      }
 
-      _momentIsReady: function () {
+      ready() {
+        super.ready();
         this.set('isMomentReady', true);
 
         if (typeof this.format === 'undefined') {
@@ -279,15 +313,15 @@ Example:
          * We can't use multi-property observer for _updateFormattedDateMoment(date, dateFormat, utc).
          * Because one of them could be undefined. So, the observer won't call.
          */
-        this.observers = [
-          '_updateFormattedDate(format)',
-          '_startOfChanged(startOf)',
-          '_endOfChanged(endOf)',
-          '_updateRelativeTime(fromNow)',
-          '_updateRelativeTime(toNow)',
-          '_updateRelativeTime(calendarTime)',
-          '_updateIsValid(date, dateFormat)'
-        ];
+//        this.observers = [
+//          '_updateFormattedDate(format)',
+//          '_startOfChanged(startOf)',
+//          '_endOfChanged(endOf)',
+//          '_updateRelativeTime(fromNow)',
+//          '_updateRelativeTime(toNow)',
+//          '_updateRelativeTime(calendarTime)',
+//          '_updateIsValid(date, dateFormat)'
+//        ];
 
         // TODO: run only needed observer function (for first time.)
         this._dateChanged(this.date);
@@ -296,6 +330,8 @@ Example:
         this._endOfChanged(this.endOf);
         this._updateIsValid(this.date, this.dateFormat);
       }
-    });
+    }
+
+    window.customElements.define(MomentJsSpan.is, MomentJsSpan);
   </script>
 </dom-module>
