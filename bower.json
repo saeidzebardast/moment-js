@@ -14,19 +14,22 @@
   ],
   "main": "moment-js.html",
   "license": "MIT",
-  "homepage": "https://github.com/saeidzebardast/moment-js/",
+  "homepage": "https://github.com/lordoftheflies/moment-js/",
   "ignore": [
     "/.*",
     "/test/"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.2.0",
+    "polymer": "Polymer/polymer#^2.0.0",
     "moment": "^2.2.1"
   },
   "devDependencies": {
-    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
-    "web-component-tester": "^5.0.0",
-    "github-fork-ribbon": "^0.2.0",
-    "demo-snippet": "^1.0.0"
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
+    "github-fork-ribbon": "^0.2.0"
+  },
+  "resolutions": {
+    "polymer": "^2.0.0"
   }
 }
