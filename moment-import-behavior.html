@@ -16,6 +16,7 @@
        */
       locale: {
         type: String,
+        value: window.MomentJs.language,
         observer: '_localeChanged'
       }
     },
@@ -74,8 +75,8 @@
      * @private
      */
     _isValidLocale: function(locale) {
-      return locale && locale.length >=2 &&
-        /^[a-zA-Z]{1,2}(-[a-zA-Z]{2,6})?$/.test(locale);
+      return !!locale && locale.length >=2 &&
+        /^[a-zA-Z]{1,3}(-[a-zA-Z]{2,6})?$/.test(locale);
     },
 
     /**
