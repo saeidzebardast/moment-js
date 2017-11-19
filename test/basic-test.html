@@ -28,6 +28,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 </test-fixture>
 
+<test-fixture id="localized-moment-js-fixture">
+  <template>
+    <div>
+      <moment-js></moment-js>
+      <moment-js></moment-js>
+      <moment-js></moment-js>
+    </div>
+  </template>
+</test-fixture>
+
 <script>
   suite('<moment-js>', function () {
 
@@ -168,6 +178,49 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     test('default value is the current date', function () {
       myEl.addEventListener('moment-is-ready', function () {
         assert.equal(myEl.date, new Date());
+        done();
+      });
+    });
+
+    test('locale value validation', function() {
+      assert.isFalse(myEl._isValidLocale(''));
+      assert.isFalse(myEl._isValidLocale('a'));
+      assert.isFalse(myEl._isValidLocale('en1'));
+      assert.isFalse(myEl._isValidLocale('en-c'));
+      assert.isFalse(myEl._isValidLocale('enc-a'));
+      assert.isFalse(myEl._isValidLocale('enca'));
+      assert.isFalse(myEl._isValidLocale('en-c0'));
+      assert.isTrue(myEl._isValidLocale('en'));
+      assert.isTrue(myEl._isValidLocale('en-ca'));
+      assert.isTrue(myEl._isValidLocale('gom-latn'));
+      assert.isTrue(myEl._isValidLocale('x-pseudo'));
+    });
+
+    test('default moment-js locale is same as browser or English', function() {
+      assert.equal(navigator.language || 'en', window.MomentJs.language);
+    });
+
+    test('default locale of moment-js instances is the same as global', function() {
+      var div = fixture('localized-moment-js-fixture');
+      var elements = div.querySelectorAll('moment-js');
+      assert.isTrue(elements.length > 1);
+      for (let i = 0, l = elements.length; i < l; i++) {
+        assert.equal(window.MomentJs.language, elements[i].locale);
+      }
+    });
+
+    test('all moment-js instances share the same locale', function() {
+      // Get fixtures of several instances.
+      var div = fixture('localized-moment-js-fixture');
+      var elements = div.querySelectorAll('moment-js');
+      assert.isTrue(elements.length > 1);
+      // Check instances synchronization.
+      var locale = 'ja';
+      elements[0].addEventListener('moment-is-ready', function () {
+        elements[0].locale = locale;
+        for (let i = 0, l = elements.length; i < l; i++) {
+          assert.equal(locale, elements[i].locale);
+        }
         done();
       });
     });

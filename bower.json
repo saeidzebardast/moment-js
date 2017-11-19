@@ -27,6 +27,7 @@
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
     "web-component-tester": "^5.0.0",
     "github-fork-ribbon": "^0.2.0",
-    "demo-snippet": "^1.0.0"
+    "demo-snippet": "^1.0.0",
+    "paper-input": "PolymerElements/paper-input#^2.0.3"
   }
 }
