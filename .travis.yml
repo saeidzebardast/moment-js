@@ -12,6 +12,6 @@ addons:
 before_script:
   - npm install -g polymer-cli
   - polymer install --variants
-  - polymer lint --rules polymer-1
+  - polymer lint --rules polymer-2-hybrid
 script:
   - xvfb-run polymer test --skip-plugin sauce

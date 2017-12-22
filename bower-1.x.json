@@ -29,18 +29,21 @@
     "github-fork-ribbon": "^0.2.0",
     "iron-demo-helpers": "^2.0.0",
     "paper-input": "PolymerElements/paper-input#^1.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.24",
     "demo-snippet": "^1.0.0"
   },
   "variants": {
     "1.x": {
       "dependencies": {
-        "polymer": "Polymer/polymer#^1.9"
+        "polymer": "Polymer/polymer#^1.9",
+        "moment": "^2.2.1"
       },
       "devDependencies": {
         "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
         "web-component-tester": "^5.0.0",
         "demo-snippet": "^1.0.0",
-        "paper-input": "PolymerElements/paper-input#^1.0.0"
+        "paper-input": "PolymerElements/paper-input#^1.0.0",
+        "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.24"
       },
       "resolutions": {
         "webcomponentsjs": "^0.7.24"
