@@ -39,23 +39,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 </test-fixture>
 
 <script>
-  suite('<moment-js>', function () {
+  suite('<moment-js>', function() {
 
-    var myEl;
-    function checkMomentIsReady() {
+    function onMomentIsReady(cb) {
+      myEl.addEventListener('moment-is-ready', cb);
       if (window.moment) {
         myEl.fire('moment-is-ready');
       }
     }
 
-    setup(function () {
+    let myEl;
+
+    setup(function() {
       myEl = fixture('moment-js-fixture');
     });
 
     test('ISO Date is valid', function (done) {
       myEl.set('date', '2011-10-10T10:20:30');
 
-      myEl.addEventListener('moment-is-ready', function () {
+      onMomentIsReady(function() {
         assert.isTrue(myEl.isValid);
         done();
       });
@@ -64,36 +66,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     test('ISO Date is not valid', function (done) {
       myEl.set('date', '2011-10-10T10:20:90');
 
-      myEl.addEventListener('moment-is-ready', function () {
+      onMomentIsReady(function() {
         assert.isFalse(myEl.isValid);
         done();
       });
-
-      checkMomentIsReady();
     });
 
     test('Formatted Date is valid', function (done) {
       myEl.set('date', '25/10/2011 10 20 30');
       myEl.set('dateFormat', 'DD/MM/YYYY HH mm ss');
 
-      myEl.addEventListener('moment-is-ready', function () {
+      onMomentIsReady(function() {
         assert.isTrue(myEl.isValid);
         done();
       });
-
-      checkMomentIsReady();
     });
 
     test('Formatted Date is not valid', function (done) {
       myEl.set('date', '25/10/2011 10 20 90');
       myEl.set('dateFormat', 'DD/MM/YYYY HH mm ss');
 
-      myEl.addEventListener('moment-is-ready', function () {
+      onMomentIsReady(function() {
         assert.isFalse(myEl.isValid);
         done();
       });
-
-      checkMomentIsReady();
     });
 
     test('Format UTC Milliseconds', function (done) {
@@ -101,12 +97,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       myEl.set('format', 'HH:mm:ss.SSS');
       myEl.set('utc', true);
 
-      myEl.addEventListener('moment-is-ready', function () {
+      onMomentIsReady(function() {
         assert.equal(myEl.formattedDate, '00:00:13.700');
         done();
       });
-
-      checkMomentIsReady();
     });
 
     test('Format date', function (done) {
@@ -114,12 +108,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       myEl.set('dateFormat', 'YYYY-MM-DD HH:mm:ss.SSS');
       myEl.set('format', 'YYYY/MM/DD HH mm ss SSS');
 
-      myEl.addEventListener('moment-is-ready', function () {
+      onMomentIsReady(function() {
         assert.equal(myEl.formattedDate, '2016/02/03 08 12 16 456');
         done();
       });
-
-      checkMomentIsReady();
     });
 
     test('set startOf', function (done) {
@@ -127,12 +119,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       myEl.set('startOf', 'hour');
       myEl.set('format', 'YYYY/MM/DD HH:mm:ss.SSS');
 
-      myEl.addEventListener('moment-is-ready', function () {
+      onMomentIsReady(function() {
         assert.equal(myEl.formattedDate, '2016/02/03 08:00:00.000');
         done();
       });
-
-      checkMomentIsReady();
     });
 
     test('set endOf', function (done) {
@@ -140,12 +130,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       myEl.set('endOf', 'day');
       myEl.set('format', 'YYYY/MM/DD HH:mm:ss.SSS');
 
-      myEl.addEventListener('moment-is-ready', function () {
+      onMomentIsReady(function() {
         assert.equal(myEl.formattedDate, '2016/02/03 23:59:59.999');
         done();
       });
-
-      checkMomentIsReady();
     });
 
     test('relative time from now', function (done) {
@@ -153,13 +141,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       myEl.set('dateFormat', 'HH:mm');
       myEl.set('fromNow', true);
 
-      myEl.addEventListener('moment-is-ready', function () {
-        var tempDate = moment(myEl.date, myEl.dateFormat);
+      onMomentIsReady(function() {
+        let tempDate = moment(myEl.date, myEl.dateFormat);
         assert.equal(myEl.relativeTime, tempDate.fromNow());
         done();
       });
-
-      checkMomentIsReady();
     });
 
     test('relative time to now', function (done) {
@@ -167,28 +153,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       myEl.set('dateFormat', 'HH:mm');
       myEl.set('toNow', true);
 
-      myEl.addEventListener('moment-is-ready', function () {
-        var tempDate = moment(myEl.date, myEl.dateFormat);
+      onMomentIsReady(function() {
+        let tempDate = moment(myEl.date, myEl.dateFormat);
         assert.equal(myEl.relativeTime, tempDate.toNow());
         done();
       });
-
-      checkMomentIsReady();
     });
 
     test('calendar time', function (done) {
       myEl.set('calendarTime', true);
 
-      myEl.addEventListener('moment-is-ready', function () {
-        var date = moment().startOf('month').format();
+      onMomentIsReady(function() {
+        let date = moment().startOf('month').format();
         myEl.set('date', date);
         myEl.set('dateFormat', 'HH:mm');
-        var tempDate = moment(myEl.date, myEl.dateFormat);
+        let tempDate = moment(myEl.date, myEl.dateFormat);
         assert.equal(myEl.relativeTime, tempDate.calendar());
         done();
       });
-
-      checkMomentIsReady();
     });
 
     test('relative time can be updated', function (done) {
@@ -197,23 +179,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       myEl.set('toNow', true);
       myEl.set('date', '10:20');
 
-      myEl.addEventListener('moment-is-ready', function () {
-        var tempDate = moment('10:20', myEl.dateFormat);
+      onMomentIsReady(function() {
+        let tempDate = moment('10:20', myEl.dateFormat);
         assert.equal(myEl.relativeTime, tempDate.toNow());
         done();
       });
-
-      checkMomentIsReady();
     });
 
     test('distributed children', function (done) {
-      myEl.addEventListener('moment-is-ready', function () {
-        var els = myEl.getContentChildren();
+      onMomentIsReady(function() {
+        let els = myEl.getContentChildren();
         assert.equal(els.length, 0, 'zero distributed node');
         done();
       });
-
-      checkMomentIsReady();
     });
 
     test('locale value validation', function() {
