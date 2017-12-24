@@ -213,29 +213,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
 
     test('default locale of moment-js instances is the same as global', function() {
-      var div = fixture('localized-moment-js-fixture');
-      var elements = div.querySelectorAll('moment-js');
+      let div = fixture('localized-moment-js-fixture');
+      let elements = div.querySelectorAll('moment-js');
       assert.isTrue(elements.length > 1);
       for (let i = 0, l = elements.length; i < l; i++) {
         assert.equal(window.MomentJs.language, elements[i].locale);
       }
     });
 
-    test('all moment-js instances share the same locale', function() {
+    test('all moment-js instances share the same locale', function(done) {
       // Get fixtures of several instances.
-      var div = fixture('localized-moment-js-fixture');
-      var elements = div.querySelectorAll('moment-js');
+      let div = fixture('localized-moment-js-fixture');
+      let elements = div.querySelectorAll('moment-js');
       assert.isTrue(elements.length > 1);
       // Check instances synchronization.
-      var locale = 'ja';
-      elements[0].addEventListener('moment-is-ready', function () {
-        elements[0].locale = locale;
-        for (let i = 0, l = elements.length; i < l; i++) {
-          assert.equal(locale, elements[i].locale);
-        }
-        done();
-      });
+      let count = elements.length;
+      for (let i = 0, l = elements.length; i < l; i++) {
+        elements[i].addEventListener('moment-locale-changed', function() {
+          assert.equal('ja', this.locale);
+          if (--count === 0) {
+            done();
+          }
+        });
+      }
+      elements[0].locale = 'ja';
     });
+
   });
 </script>
 
