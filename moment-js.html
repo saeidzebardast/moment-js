@@ -197,7 +197,8 @@ Example:
       },
 
       listeners: {
-        'moment-is-ready': '_momentIsReady'
+        'moment-is-ready': '_momentIsReady',
+        'moment-locale-changed': '_dateChanged'
       },
 
       _dateChanged: function (newVal) {

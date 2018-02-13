@@ -28,146 +28,233 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 </test-fixture>
 
+<test-fixture id="localized-moment-js-fixture">
+  <template>
+    <div>
+      <moment-js></moment-js>
+      <moment-js></moment-js>
+      <moment-js></moment-js>
+    </div>
+  </template>
+</test-fixture>
+
 <script>
   suite('<moment-js>', function () {
 
     var myEl;
+    function checkMomentIsReady() {
+      if (window.moment) {
+        myEl.fire('moment-is-ready');
+      }
+    }
 
     setup(function () {
       myEl = fixture('moment-js-fixture');
     });
 
     test('ISO Date is valid', function (done) {
+      myEl.set('date', '2011-10-10T10:20:30');
+
       myEl.addEventListener('moment-is-ready', function () {
-        myEl.set('date', '2011-10-10T10:20:30');
         assert.isTrue(myEl.isValid);
         done();
       });
     });
 
-    test('ISO Date is not valid', function () {
+    test('ISO Date is not valid', function (done) {
+      myEl.set('date', '2011-10-10T10:20:90');
+
       myEl.addEventListener('moment-is-ready', function () {
-        myEl.set('date', '2011-10-10T10:20:90');
         assert.isFalse(myEl.isValid);
         done();
       });
+
+      checkMomentIsReady();
     });
 
-    test('Formatted Date is valid', function () {
+    test('Formatted Date is valid', function (done) {
+      myEl.set('date', '25/10/2011 10 20 30');
+      myEl.set('dateFormat', 'DD/MM/YYYY HH mm ss');
+
       myEl.addEventListener('moment-is-ready', function () {
-        myEl.set('date', '25/10/2011 10 20 30');
-        myEl.set('dateFormat', 'DD/MM/YYYY HH mm ss');
         assert.isTrue(myEl.isValid);
         done();
       });
+
+      checkMomentIsReady();
     });
 
-    test('Formatted Date is not valid', function () {
+    test('Formatted Date is not valid', function (done) {
+      myEl.set('date', '25/10/2011 10 20 90');
+      myEl.set('dateFormat', 'DD/MM/YYYY HH mm ss');
+
       myEl.addEventListener('moment-is-ready', function () {
-        myEl.set('date', '25/10/2011 10 20 90');
-        myEl.set('dateFormat', 'DD/MM/YYYY HH mm ss');
         assert.isFalse(myEl.isValid);
         done();
       });
+
+      checkMomentIsReady();
     });
 
-    test('Format UTC Milliseconds', function () {
+    test('Format UTC Milliseconds', function (done) {
+      myEl.set('date', '13700');
+      myEl.set('format', 'HH:mm:ss.SSS');
+      myEl.set('utc', true);
+
       myEl.addEventListener('moment-is-ready', function () {
-        myEl.set('date', '13700');
-        myEl.set('format', 'HH:mm:ss.SSS');
-        myEl.set('utc', true);
         assert.equal(myEl.formattedDate, '00:00:13.700');
         done();
       });
+
+      checkMomentIsReady();
     });
 
-    test('Format date', function () {
+    test('Format date', function (done) {
+      myEl.set('date', '2016-02-03 08:12:16.456');
+      myEl.set('dateFormat', 'YYYY-MM-DD HH:mm:ss.SSS');
+      myEl.set('format', 'YYYY/MM/DD HH mm ss SSS');
+
       myEl.addEventListener('moment-is-ready', function () {
-        myEl.set('date', '2016-02-03 08:12:16.456');
-        myEl.set('dateFormat', 'YYYY-MM-DD HH:mm:ss.SSS');
-        myEl.set('format', 'YYYY/MM/DD HH mm ss SSS');
         assert.equal(myEl.formattedDate, '2016/02/03 08 12 16 456');
         done();
       });
+
+      checkMomentIsReady();
     });
 
-    test('set startOf', function () {
+    test('set startOf', function (done) {
+      myEl.set('date', '2016-02-03 08:12:16.456');
+      myEl.set('startOf', 'hour');
+      myEl.set('format', 'YYYY/MM/DD HH:mm:ss.SSS');
+
       myEl.addEventListener('moment-is-ready', function () {
-        myEl.set('date', '2016-02-03 08:12:16.456');
-        myEl.set('startOf', 'hour');
-        myEl.set('format', 'YYYY/MM/DD HH:mm:ss.SSS');
         assert.equal(myEl.formattedDate, '2016/02/03 08:00:00.000');
         done();
       });
+
+      checkMomentIsReady();
     });
 
-    test('set endOf', function () {
+    test('set endOf', function (done) {
+      myEl.set('date', '2016-02-03 08:12:16.456');
+      myEl.set('endOf', 'day');
+      myEl.set('format', 'YYYY/MM/DD HH:mm:ss.SSS');
+
       myEl.addEventListener('moment-is-ready', function () {
-        myEl.set('date', '2016-02-03 08:12:16.456');
-        myEl.set('endOf', 'day');
-        myEl.set('format', 'YYYY/MM/DD HH:mm:ss.SSS');
         assert.equal(myEl.formattedDate, '2016/02/03 23:59:59.999');
         done();
       });
+
+      checkMomentIsReady();
     });
 
-    test('relative time from now', function () {
+    test('relative time from now', function (done) {
+      myEl.set('date', '08:12');
+      myEl.set('dateFormat', 'HH:mm');
+      myEl.set('fromNow', true);
+
       myEl.addEventListener('moment-is-ready', function () {
-        myEl.set('date', '08:12');
-        myEl.set('dateFormat', 'HH:mm');
-        myEl.set('fromNow', true);
         var tempDate = moment(myEl.date, myEl.dateFormat);
         assert.equal(myEl.relativeTime, tempDate.fromNow());
         done();
       });
+
+      checkMomentIsReady();
     });
 
-    test('relative time to now', function () {
+    test('relative time to now', function (done) {
+      myEl.set('date', '08:12');
+      myEl.set('dateFormat', 'HH:mm');
+      myEl.set('toNow', true);
+
       myEl.addEventListener('moment-is-ready', function () {
-        myEl.set('date', '08:12');
-        myEl.set('dateFormat', 'HH:mm');
-        myEl.set('toNow', true);
         var tempDate = moment(myEl.date, myEl.dateFormat);
         assert.equal(myEl.relativeTime, tempDate.toNow());
         done();
       });
+
+      checkMomentIsReady();
     });
 
-    test('calendar time', function () {
+    test('calendar time', function (done) {
+      myEl.set('calendarTime', true);
+
       myEl.addEventListener('moment-is-ready', function () {
         var date = moment().startOf('month').format();
         myEl.set('date', date);
         myEl.set('dateFormat', 'HH:mm');
-        myEl.set('fromNow', true);
         var tempDate = moment(myEl.date, myEl.dateFormat);
         assert.equal(myEl.relativeTime, tempDate.calendar());
         done();
       });
+
+      checkMomentIsReady();
     });
-        
-    test('relative time can be updated', function () {
+
+    test('relative time can be updated', function (done) {
+      myEl.set('date', '08:12');
+      myEl.set('dateFormat', 'HH:mm');
+      myEl.set('toNow', true);
+      myEl.set('date', '10:20');
+
       myEl.addEventListener('moment-is-ready', function () {
-        myEl.set('date', '08:12');
-        myEl.set('dateFormat', 'HH:mm');
-        myEl.set('toNow', true);
-        myEl.set('date', '10:20');
         var tempDate = moment('10:20', myEl.dateFormat);
         assert.equal(myEl.relativeTime, tempDate.toNow());
         done();
       });
+
+      checkMomentIsReady();
     });
 
-    test('distributed children', function () {
+    test('distributed children', function (done) {
       myEl.addEventListener('moment-is-ready', function () {
         var els = myEl.getContentChildren();
         assert.equal(els.length, 0, 'zero distributed node');
         done();
       });
+
+      checkMomentIsReady();
     });
 
-    test('default value is the current date', function () {
-      myEl.addEventListener('moment-is-ready', function () {
-        assert.equal(myEl.date, new Date());
+    test('locale value validation', function() {
+      assert.isFalse(myEl._isValidLocale(''));
+      assert.isFalse(myEl._isValidLocale('a'));
+      assert.isFalse(myEl._isValidLocale('en1'));
+      assert.isFalse(myEl._isValidLocale('en-c'));
+      assert.isFalse(myEl._isValidLocale('enc-a'));
+      assert.isFalse(myEl._isValidLocale('enca'));
+      assert.isFalse(myEl._isValidLocale('en-c0'));
+      assert.isTrue(myEl._isValidLocale('en'));
+      assert.isTrue(myEl._isValidLocale('en-ca'));
+      assert.isTrue(myEl._isValidLocale('gom-latn'));
+      assert.isTrue(myEl._isValidLocale('x-pseudo'));
+    });
+
+    test('default moment-js locale is same as browser or English', function() {
+      assert.equal(navigator.language || 'en', window.MomentJs.language);
+    });
+
+    test('default locale of moment-js instances is the same as global', function() {
+      var div = fixture('localized-moment-js-fixture');
+      var elements = div.querySelectorAll('moment-js');
+      assert.isTrue(elements.length > 1);
+      for (let i = 0, l = elements.length; i < l; i++) {
+        assert.equal(window.MomentJs.language, elements[i].locale);
+      }
+    });
+
+    test('all moment-js instances share the same locale', function() {
+      // Get fixtures of several instances.
+      var div = fixture('localized-moment-js-fixture');
+      var elements = div.querySelectorAll('moment-js');
+      assert.isTrue(elements.length > 1);
+      // Check instances synchronization.
+      var locale = 'ja';
+      elements[0].addEventListener('moment-is-ready', function () {
+        elements[0].locale = locale;
+        for (let i = 0, l = elements.length; i < l; i++) {
+          assert.equal(locale, elements[i].locale);
+        }
         done();
       });
     });
