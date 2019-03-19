@@ -146,6 +146,7 @@
           this.fire('moment-locale-changed');
           resolve();
         };
+        script.onerror = () => resolve();
         document.body.appendChild(script);
       });
     }
