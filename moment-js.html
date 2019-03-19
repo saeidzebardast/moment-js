@@ -1,4 +1,5 @@
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../polymer/lib/legacy/class.html">
 <link rel="import" href="./moment-import-behavior.html">
 
 <!--
@@ -6,44 +7,43 @@ A Polymer element to parse, validate, manipulate, and display dates using Moment
 
 Example:
 
-    <moment-js
-      format="YYYY-MM-DD HH:mm:ss"></moment-js>
+  <moment-js format="YYYY-MM-DD HH:mm:ss"></moment-js>
 
 Example:
 
-    <moment-js
-      date="2016-01-10 14:30"
-      date-format="YYYY-MM-DD HH:mm"
-      format="LLLL"></moment-js>
+  <moment-js
+    date="2016-01-10 14:30"
+    date-format="YYYY-MM-DD HH:mm"
+    format="LLLL"></moment-js>
 
 Example:
 
-    <moment-js
-      date="2016-01-10 14:30"
-      date-format="YYYY-MM-DD HH:mm"
-      format="LLLL"
-      formatted-date="{{myDate}}"
-      hide></moment-js>
+  <moment-js
+    date="2016-01-10 14:30"
+    date-format="YYYY-MM-DD HH:mm"
+    format="LLLL"
+    formatted-date="{{myDate}}"
+    hide></moment-js>
 
 Example:
 
-    <moment-js
-      date="19:33"
-      date-format="HH:mm"
-      start-of="hour"></moment-js>
+  <moment-js
+    date="19:33"
+    date-format="HH:mm"
+    start-of="hour"></moment-js>
 
 Example:
 
-    <moment-js
-      date="23:30"
-      date-format="HH:mm"
-      from-now></moment-js>
+  <moment-js
+    date="23:30"
+    date-format="HH:mm"
+    from-now></moment-js>
 
 Example:
 
-    <moment-js
-      date="2016-01-10 14:30"
-      calendar-time></moment-js>
+  <moment-js
+    date="2016-01-10 14:30"
+    calendar-time></moment-js>
 
 
 @demo demo/index.html
@@ -56,140 +56,144 @@ Example:
   </template>
 
   <script>
-    Polymer({
-      is: 'moment-js',
+    class MomentJs extends Polymer.mixinBehaviors(
+      [window.MomentJs.MomentImportBehavior], Polymer.Element) {
 
-      behaviors: [
-        MomentJs.MomentImportBehavior
-      ],
+      static get is() {
+        return 'moment-js';
+      }
 
-      properties: {
-        /**
-         * Date parameter
-         */
-        date: {
-          type: String,
-          observer: '_dateChanged'
-        },
 
-        /**
-         * Format for parsing the date parameter.
-         */
-        dateFormat: {
-          type: String,
-          value: null,
-          observer: '_updateFormattedDateMoment'
-        },
+      static get properties() {
+        return {
+          /**
+           * Date parameter
+           */
+          date: {
+            type: String,
+            observer: '_dateChanged'
+          },
 
-        /**
-         * Format for setting the formattedDate.
-         */
-        format: String,
+          /**
+           * Format for parsing the date parameter.
+           */
+          dateFormat: {
+            type: String,
+            value: null,
+            observer: '_updateFormattedDateMoment'
+          },
 
-        /**
-         * Output formatted date.
-         */
-        formattedDate: {
-          type: String,
-          readOnly: true,
-          notify: true
-        },
+          /**
+           * Format for setting the formattedDate.
+           */
+          format: String,
 
-        /**
-         * Moment object of formatted date.
-         */
-        formattedDateMoment: {
-          type: String,
-          readOnly: true,
-          notify: true
-        },
+          /**
+           * Output formatted date.
+           */
+          formattedDate: {
+            type: String,
+            readOnly: true,
+            notify: true
+          },
 
-        /**
-         * Enable UTC Mode.
-         */
-        utc: {
-          type: Boolean,
-          value: false,
-          observer: '_updateFormattedDateMoment'
-        },
+          /**
+           * Moment object of formatted date.
+           */
+          formattedDateMoment: {
+            type: String,
+            readOnly: true,
+            notify: true
+          },
 
-        /**
-         * Hide showing the output.
-         */
-        hide: {
-          type: Boolean,
-          value: false
-        },
+          /**
+           * Enable UTC Mode.
+           */
+          utc: {
+            type: Boolean,
+            value: false,
+            observer: '_updateFormattedDateMoment'
+          },
 
-        /**
-         * Set True if date is valid.
-         */
-        isValid: {
-          type: Boolean,
-          value: false
-        },
+          /**
+           * Hide showing the output.
+           */
+          hide: {
+            type: Boolean,
+            value: false
+          },
 
-        /**
-         * Mutates the original moment by setting it to the start of a unit of time.
-         */
-        startOf: String,
+          /**
+           * Set True if date is valid.
+           */
+          isValid: {
+            type: Boolean,
+            value: false
+          },
 
-        /**
-         * Mutates the original moment by setting it to the end of a unit of time.
-         */
-        endOf: String,
+          /**
+           * Mutates the original moment by setting it to the start of a unit of time.
+           */
+          startOf: String,
 
-        /**
-         * Relative time output. e.g. a day ago, in 4 years.
-         */
-        relativeTime: {
-          type: String,
-          readOnly: true,
-          notify: true
-        },
+          /**
+           * Mutates the original moment by setting it to the end of a unit of time.
+           */
+          endOf: String,
 
-        /**
-         * Calculate relativeTime from now.
-         */
-        fromNow: Boolean,
+          /**
+           * Relative time output. e.g. a day ago, in 4 years.
+           */
+          relativeTime: {
+            type: String,
+            readOnly: true,
+            notify: true
+          },
 
-        /**
-         * Calendar time output. e.g. Last Monday at 2:30 AM, Today at 2:30 AM.
-         */
-        calendarTime: Boolean,
+          /**
+           * Calculate relativeTime from now.
+           */
+          fromNow: Boolean,
 
-        /**
-         * Calculate relativeTime to now.
-         * This is similar to fromNow, but gives the opposite interval: fromNow() = - toNow().
-         */
-        toNow: Boolean,
+          /**
+           * Calendar time output. e.g. Last Monday at 2:30 AM, Today at 2:30 AM.
+           */
+          calendarTime: Boolean,
 
-        /**
-         * Output result to display.
-         * It could be date time or relative time.
-         */
-        output: {
-          type: String,
-          readOnly: true,
-          notify: true
-        },
+          /**
+           * Calculate relativeTime to now.
+           * This is similar to fromNow, but gives the opposite interval: fromNow() = - toNow().
+           */
+          toNow: Boolean,
 
-        /**
-         * Indicate moment is loaded and ready to use.
-         */
-        isMomentReady: {
-          type: Boolean,
-          value: false,
-          notify: true
-        }
-      },
+          /**
+           * Output result to display.
+           * It could be date time or relative time.
+           */
+          output: {
+            type: String,
+            readOnly: true,
+            notify: true
+          },
 
-      listeners: {
-        'moment-is-ready': '_momentIsReady',
-        'moment-locale-changed': '_dateChanged'
-      },
+          /**
+           * Indicate moment is loaded and ready to use.
+           */
+          isMomentReady: {
+            type: Boolean,
+            value: false,
+            notify: true
+          }
+        };
+      }
 
-      _dateChanged: function (newVal) {
+      ready() {
+        super.ready();
+        this.addEventListener('moment-is-ready', this._momentIsReady);
+        this.addEventListener('moment-locale-changed', this._dateChanged);
+      }
+
+      _dateChanged(newVal) {
         if (this.isMomentReady === true) {
           if (isNaN(newVal)) {
             this.set('date', this.date);
@@ -199,9 +203,9 @@ Example:
 
           this._updateFormattedDateMoment();
         }
-      },
+      }
 
-      _updateFormattedDateMoment: function () {
+      _updateFormattedDateMoment() {
         if (this.isMomentReady === true) {
           if (this.dateFormat) {
             if (this.utc) {
@@ -220,18 +224,18 @@ Example:
           this._updateFormattedDate();
           this._updateRelativeTime();
         }
-      },
+      }
 
-      _updateFormattedDate: function () {
+      _updateFormattedDate() {
         if (this.formattedDateMoment) {
           this._setFormattedDate(this.formattedDateMoment.format(this.format));
           if (!this.relativeTime) {
             this._setOutput(this.formattedDate);
           }
         }
-      },
+      }
 
-      _updateRelativeTime: function() {
+      _updateRelativeTime() {
         if (this.formattedDateMoment) {
           if (this.fromNow) {
             this._setRelativeTime(this.formattedDateMoment.fromNow());
@@ -245,9 +249,9 @@ Example:
             this._setOutput(this.relativeTime);
           }
         }
-      },
+      }
 
-      _updateIsValid: function () {
+      _updateIsValid() {
         if (this.dateFormat) {
           /**
            * Moment will show a warning for invalid dates. e.g. 14:30.
@@ -257,19 +261,19 @@ Example:
         } else {
           this.set('isValid', moment(this.date).isValid());
         }
-      },
+      }
 
-      _startOfChanged: function () {
+      _startOfChanged() {
         this._setFormattedDateMoment(this.formattedDateMoment.startOf(this.startOf));
         this._updateFormattedDate();
-      },
+      }
 
-      _endOfChanged: function () {
+      _endOfChanged() {
         this._setFormattedDateMoment(this.formattedDateMoment.endOf(this.endOf));
         this._updateFormattedDate();
-      },
+      }
 
-      _momentIsReady: function () {
+      _momentIsReady() {
         this.set('isMomentReady', true);
 
         if (typeof this.format === 'undefined') {
@@ -297,6 +301,8 @@ Example:
         this._endOfChanged(this.endOf);
         this._updateIsValid(this.date, this.dateFormat);
       }
-    });
+    }
+
+    window.customElements.define(MomentJs.is, MomentJs);
   </script>
 </dom-module>

@@ -1,4 +1,3 @@
-<link rel="import" href="../polymer/polymer.html">
 <script>
   window.MomentJs = window.MomentJs || {};
 
@@ -8,7 +7,7 @@
   /**
    * @polymerBehavior MomentJs.MomentImportBehavior
    */
-  MomentJs.MomentImportBehavior = {
+   window.MomentJs.MomentImportBehavior = {
 
     properties: {
       /**
@@ -21,7 +20,7 @@
       }
     },
 
-    ready: function () {
+    ready: function() {
       if (typeof window.moment === 'undefined') {
         if (!window.MomentJs.isLoading) {
           window.MomentJs.isLoading = true;
@@ -47,8 +46,10 @@
       script.onload = function() {
         window.MomentJs.isLoading = false;
         console.debug('[moment-js] momentjs library is loaded!');
-        this._localize();
-        this.fire('moment-is-ready');
+        this._localizeGlobalMoment()
+          .then(() => {
+            this.fire('moment-is-ready');
+          });
       }.bind(this);
       document.body.appendChild(script);
     },
@@ -60,7 +61,6 @@
      */
     _waitToLoadMomentJs: function() {
       if (typeof window.moment !== 'undefined') {
-        this._localize();
         this.fire('moment-is-ready');
       } else {
         window.setTimeout(this._waitToLoadMomentJs.bind(this), 1);
@@ -75,7 +75,7 @@
      * @private
      */
     _isValidLocale: function(locale) {
-      return !!locale && locale.length >=2 &&
+      return !!locale && locale.length >= 2 &&
         /^[a-zA-Z]{1,3}(-[a-zA-Z]{2,6})?$/.test(locale);
     },
 
@@ -88,14 +88,25 @@
      */
     _localeChanged: function(language) {
       var lang = language || navigator.language || 'en';
-      if (this._isValidLocale(lang)) {
-        if (lang !== window.MomentJs.language) {
-          window.MomentJs.language = lang;
-          var moments = document.querySelectorAll('moment-js');
-          for (let i = 0, l = moments.length; i < l; i++) {
-            moments[i]._localize();
-          }
-        }
+      if (lang === window.MomentJs.language) {
+        this.fire('moment-locale-changed');
+      } else if (this._isValidLocale(lang)) {
+        window.MomentJs.language = lang;
+        this._localizeGlobalMoment().then(this._syncMomentsLanguage);
+      }
+    },
+
+    /**
+     * Synchronizes all moment-js language with the global momentjs locale
+     * setting.
+     *
+     * @private
+     */
+    _syncMomentsLanguage() {
+      let moments = document.querySelectorAll('moment-js');
+      let lang = window.MomentJs.language;
+      for (let i = 0, l = moments.length; i < l; i++) {
+        moments[i].locale = lang;
       }
     },
 
@@ -108,40 +119,36 @@
      *
      * @private
      */
-    _localize: function() {
-      // Wait until the locales are loaded.
-      if (window.MomentJs.isLoadingLanguage) {
-        window.setTimeout(this._localize.bind(this), 1);
-        return;
-      }
-
-      // Check if the script is already loaded.
-      var lang = window.MomentJs.language;
-      var fileName = '/moment/locale/' + lang + '.js';
-      var scripts = document.querySelectorAll('script');
-      for (var i = 0; i < scripts.length; i++) {
-        if (scripts[i].src.includes(fileName)) {
-          // Update momentjs locale once.
-          if (moment.locale() !== lang) {
-            window.moment.locale(lang);
+    _localizeGlobalMoment: function() {
+      return new Promise((resolve) => {
+        // Check if the script is already loaded.
+        var lang = window.MomentJs.language;
+        var fileName = '/moment/locale/' + lang + '.js';
+        var scripts = document.querySelectorAll('script');
+        for (var i = 0; i < scripts.length; i++) {
+          if (scripts[i].src.includes(fileName)) {
+            // Update momentjs locale once.
+            if (window.moment.locale() !== lang) {
+              window.moment.locale(lang);
+            }
+            this.fire('moment-locale-changed');
+            return resolve();
           }
-          this.fire('moment-locale-changed');
-          return;
         }
-      }
 
-      // Load language and set it as momentjs locale.
-      window.MomentJs.isLoadingLanguage = true;
-      var script = document.createElement('script');
-      script.src = this.resolveUrl('..' + fileName);
-      script.onload = function () {
-        console.debug('[moment-js] locales file for "' + lang + '" loaded');
-        window.MomentJs.isLoadingLanguage = false;
-        window.moment.locale(lang);
-        console.debug('[moment-js] language set to "' + lang + '"');
-        this.fire('moment-locale-changed');
-      }.bind(this);
-      document.body.appendChild(script);
+        // Load language and set it as momentjs locale.
+        var script = document.createElement('script');
+        script.src = this.resolveUrl('..' + fileName);
+        script.onload = () => {
+          console.debug('[moment-js] locales file for "' + lang + '" loaded');
+          window.moment.locale(lang);
+          console.debug('[moment-js] language set to "' + lang + '"');
+          this.fire('moment-locale-changed');
+          resolve();
+        };
+        script.onerror = () => resolve();
+        document.body.appendChild(script);
+      });
     }
   };
 </script>
