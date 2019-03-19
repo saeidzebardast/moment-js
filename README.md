@@ -37,6 +37,21 @@ bower install moment-js
 
 See the [component page](http://saeidzebardast.github.io/moment-js) for docs and demo.
 
+## Running demos and tests in a browser
+
+1. Fork the `moment-js` repository and clone it locally.
+
+2. Make sure you have [Bower](https://bower.io) installed.
+
+3. When in the `moment-js` directory, `polymer install` to install dependencies.
+
+4. Run `polymer analyze moment-* > analysis.json && polymer serve --port 3000 --open`, browser will automatically open the component API documentation.
+
+5. You can also open demo or in-browser tests by adding **demo** or **test** to the URL, for example:
+
+- http://127.0.0.1:3000/components/moment-js/demo
+- http://127.0.0.1:3000/components/moment-js/test
+
 ## License
 
 MIT © [Saeid Zebardast](http://zebardast.com)
