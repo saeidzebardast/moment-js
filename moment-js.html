@@ -183,14 +183,18 @@ Example:
             type: Boolean,
             value: false,
             notify: true
-          }
+          },
         };
       }
 
-      ready() {
-        super.ready();
-        this.addEventListener('moment-is-ready', this._momentIsReady);
-        this.addEventListener('moment-locale-changed', this._dateChanged);
+      created() {
+        super.created();
+        this.addEventListener('moment-is-ready', this._momentIsReady, {
+          passive: true,
+        });
+        this.addEventListener('moment-locale-changed', this._dateChanged, {
+          passive: true,
+        });
       }
 
       _dateChanged(newVal) {
@@ -301,6 +305,7 @@ Example:
         this._endOfChanged(this.endOf);
         this._updateIsValid(this.date, this.dateFormat);
       }
+
     }
 
     window.customElements.define(MomentJs.is, MomentJs);

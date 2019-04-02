@@ -7,7 +7,7 @@
   /**
    * @polymerBehavior MomentJs.MomentImportBehavior
    */
-   window.MomentJs.MomentImportBehavior = {
+  window.MomentJs.MomentImportBehavior = {
 
     properties: {
       /**
@@ -35,6 +35,20 @@
     },
 
     /**
+     * Dispatches a custom event. The event is composed, cancellable and bubbles
+     * through the DOM tree. It does not contain any detail.
+     *
+     * @param {String} name The name of the event to be dispatched.
+     */
+    fire: function(name) {
+      this.dispatchEvent(new CustomEvent(name, {
+        bubbles: true,
+        composed: true,
+        cancellable: true,
+      }));
+    },
+
+    /**
      * Loads momentjs library from local.
      *
      * @private
@@ -46,10 +60,7 @@
       script.onload = function() {
         window.MomentJs.isLoading = false;
         console.debug('[moment-js] momentjs library is loaded!');
-        this._localizeGlobalMoment()
-          .then(() => {
-            this.fire('moment-is-ready');
-          });
+        this._localizeGlobalMoment().then(() => this.fire('moment-is-ready'));
       }.bind(this);
       document.body.appendChild(script);
     },

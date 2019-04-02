@@ -38,6 +38,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 </test-fixture>
 
+<test-fixture id="injected-moment-js-fixture">
+  <template>
+    <div>
+      <moment-js></moment-js>
+    </div>
+  </template>
+</test-fixture>
+
 <script>
   suite('<moment-js>', function() {
 
@@ -239,6 +247,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       elements[0].locale = 'ja';
     });
 
+    test('listeners must be attached before MomentJs is ready', function(done) {
+      var div = fixture('injected-moment-js-fixture');
+      var element = document.createElement('moment-js');
+      assert.isFalse(element.isMomentReady);
+      element.addEventListener('moment-is-ready', function() {
+        assert.isTrue(element.isMomentReady);
+        assert.isString(element.output);
+        done();
+      });
+      assert.isUndefined(element.output);
+      div.appendChild(element);
+    });
   });
 </script>
 
