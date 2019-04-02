@@ -30,12 +30,22 @@
         }
       } else {
         // Moment is already loaded. e.g. by other components.
-        this.dispatchEvent(new CustomEvent('moment-is-ready', {
-          bubbles: true,
-          composed: true,
-          cancellable: true,
-        }));
+        this.fire('moment-is-ready');
       }
+    },
+
+    /**
+     * Dispatches a custom event. The event is composed, cancellable and bubbles
+     * through the DOM tree. It does not contain any detail.
+     *
+     * @param {String} name The name of the event to be dispatched.
+     */
+    fire: function(name) {
+      this.dispatchEvent(new CustomEvent(name, {
+        bubbles: true,
+        composed: true,
+        cancellable: true,
+      }));
     },
 
     /**
@@ -50,14 +60,7 @@
       script.onload = function() {
         window.MomentJs.isLoading = false;
         console.debug('[moment-js] momentjs library is loaded!');
-        this._localizeGlobalMoment()
-          .then(() => {
-            this.dispatchEvent(new CustomEvent('moment-is-ready', {
-              bubbles: true,
-              composed: true,
-              cancellable: true,
-            }));
-          });
+        this._localizeGlobalMoment().then(() => this.fire('moment-is-ready'));
       }.bind(this);
       document.body.appendChild(script);
     },
@@ -69,11 +72,7 @@
      */
     _waitToLoadMomentJs: function() {
       if (typeof window.moment !== 'undefined') {
-        this.dispatchEvent(new CustomEvent('moment-is-ready', {
-          bubbles: true,
-          composed: true,
-          cancellable: true,
-        }));
+        this.fire('moment-is-ready');
       } else {
         window.setTimeout(this._waitToLoadMomentJs.bind(this), 1);
       }
@@ -101,11 +100,7 @@
     _localeChanged: function(language) {
       var lang = language || navigator.language || 'en';
       if (lang === window.MomentJs.language) {
-        this.dispatchEvent(new CustomEvent('moment-locale-changed', {
-          bubbles: true,
-          composed: true,
-          cancellable: true,
-        }));
+        this.fire('moment-locale-changed');
       } else if (this._isValidLocale(lang)) {
         window.MomentJs.language = lang;
         this._localizeGlobalMoment().then(this._syncMomentsLanguage);
@@ -147,11 +142,7 @@
             if (window.moment.locale() !== lang) {
               window.moment.locale(lang);
             }
-            this.dispatchEvent(new CustomEvent('moment-locale-changed', {
-              bubbles: true,
-              composed: true,
-              cancellable: true,
-            }));
+            this.fire('moment-locale-changed');
             return resolve();
           }
         }
@@ -163,11 +154,7 @@
           console.debug('[moment-js] locales file for "' + lang + '" loaded');
           window.moment.locale(lang);
           console.debug('[moment-js] language set to "' + lang + '"');
-          this.dispatchEvent(new CustomEvent('moment-locale-changed', {
-            bubbles: true,
-            composed: true,
-            cancellable: true,
-          }));
+          this.fire('moment-locale-changed');
           resolve();
         };
         script.onerror = () => resolve();
